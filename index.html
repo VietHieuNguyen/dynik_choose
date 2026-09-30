@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#F7F5F0" />
+    <meta name="description" content="DYNIK — Trắc nghiệm gợi ý gu hương. Tìm mùi hương DYNIK phù hợp với bạn qua vài câu hỏi." />
+    <title>Trắc nghiệm gu hương</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <a class="visually-hidden" href="#main">Bỏ qua đến nội dung chính</a>
+
+    <main class="shell" id="main">
+      <!-- Category selection -->
+      <section class="screen is-active" id="screen-categories" aria-labelledby="intro-title">
+        <p class="eyebrow" id="intro-eyebrow">Trắc nghiệm gu hương</p>
+        <h1 class="h1" id="intro-title">Chọn loại sản phẩm</h1>
+        <p class="lede" id="intro-lede">Vài câu hỏi ngắn giúp gợi ý mùi hương phù hợp nhất với bạn.</p>
+        <div class="category-grid" id="category-grid" role="list"></div>
+      </section>
+
+      <!-- Quiz -->
+      <section class="screen" id="screen-quiz" aria-live="polite"></section>
+
+      <!-- Result -->
+      <section class="screen" id="screen-result" aria-live="polite"></section>
+
+      <!-- Error -->
+      <section class="screen" id="screen-error" role="alert">
+        <div class="status-banner">
+          <h2>Không thể tải bộ câu hỏi</h2>
+          <p class="status-banner__message">Đã có lỗi khi tải dữ liệu. Vui lòng thử lại.</p>
+          <button type="button" class="btn btn--primary" id="retry-button">Tải lại</button>
+        </div>
+      </section>
+
+      <!-- Sticky buy (mobile only) -->
+      <div class="sticky-buy" id="sticky-buy" aria-hidden="true"></div>
+
+      <footer class="footer">
+        Gợi ý dựa trên câu trả lời của bạn. Phần trăm hiển thị là chỉ số khớp gu hương.<br />
+        Mua sắm trên TikTok Shop
+      </footer>
+    </main>
+
+    <script src="js/assets.js" defer></script>
+    <script src="js/scoring.js" defer></script>
+    <script src="js/app.js" defer></script>
+  </body>
+</html>

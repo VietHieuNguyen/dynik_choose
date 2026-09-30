@@ -1,0 +1,3093 @@
+{
+  "schema_version": "2.0.1",
+  "id": "dynik_product_finder_vi",
+  "locale": "vi-VN",
+  "created_at": "2026-09-29",
+  "brand": "DYNIK",
+  "scope": {
+    "product_count": 22,
+    "category_count": 5,
+    "question_count": 20,
+    "combos_included": false,
+    "catalog_authority": "sheet",
+    "excluded_sheet_rows": [
+      21,
+      45
+    ],
+    "excluded_sheet_rows_interpretation": "Khoảng liên tục 21–45, đều là combo.",
+    "note": "5 loại: dầu gội, lăn khử mùi, nước hoa, sữa tắm, tắm gội 5in1. Giữ đủ 22 SKU. Nước hoa gồm 6 mùi và 8 SKU; chọn mùi trước, dung tích sau."
+  },
+  "design_rationale": {
+    "recommended_question_count": "5 câu cho nước hoa; 4 câu cho dầu gội, lăn khử mùi, tắm gội 5in1; 3 câu cho sữa tắm.",
+    "evidence_status": "Đề xuất UX ban đầu, chưa được A/B test hoặc chứng minh làm tăng mua hàng.",
+    "why": "Ít thao tác, câu hỏi gắn với đặc điểm phân biệt được của sản phẩm, kết quả giải thích được.",
+    "care_rule": "Chỉ chấm sự hợp gu hương giữa các biến thể cùng loại. Công dụng chung không dùng để phân hạng SKU.",
+    "size_rule": "Nước hoa xếp hạng 6 profile_id, không xếp 8 SKU như 8 mùi. Hai dung tích cùng mùi nhận điểm bằng nhau. Chọn dung tích ở kết quả; chỉ cho chọn biến thể tồn tại trong catalog.",
+    "measurement": {
+      "events": [
+        "category_selected",
+        "quiz_started",
+        "question_answered",
+        "quiz_completed",
+        "result_viewed",
+        "buy_clicked"
+      ],
+      "primary_metrics": [
+        "quiz_completed / quiz_started",
+        "buy_clicked / result_viewed"
+      ],
+      "note": "Click mua không đồng nghĩa đơn hàng. Chỉ đo doanh số nếu có dữ liệu đơn được phép đối soát. Thử nghiệm số câu phải giữ cùng nguồn traffic và theo dõi cả tỷ lệ hoàn thành lẫn click mua."
+    }
+  },
+  "ui": {
+    "entry": "category_selection",
+    "question_layout": "one_question_per_screen",
+    "options_per_question": 4,
+    "show_progress": true,
+    "allow_back": true,
+    "require_login": false,
+    "continue_label": "Tiếp tục",
+    "result_button_label": "Xem mùi hương phù hợp",
+    "buy_button_label": "Mua ngay trên TikTok",
+    "result_title": "Gu hương dành cho bạn",
+    "score_label": "% phù hợp với gu hương",
+    "score_caption": "Điểm gợi ý dựa trên câu trả lời của bạn.",
+    "retake_label": "Thử lại",
+    "change_category_label": "Chọn loại sản phẩm khác",
+    "image_missing_behavior": "Ẩn ảnh và giữ tên sản phẩm; không dựng URL ảnh giả.",
+    "price_behavior": "Không hiển thị giá khi price = null; xem giá hiện tại tại TikTok.",
+    "no_fake_urgency": true,
+    "category_order": [
+      "shampoo",
+      "deodorant",
+      "perfume",
+      "body_wash",
+      "wash_5in1"
+    ],
+    "category_image_source": "Packshot/",
+    "result_image_source": "Ưu tiên products.image_url đã nhập từ cột SCC trong Tổng hợp(1).xlsx. Chưa kiểm chứng nội dung ảnh; kiểm tra image_status, đặc biệt duplicate_url_requires_variant_review. Khi URL thiếu, dùng fallback theo JSON; official_product_url là nguồn tham khảo để bổ sung ảnh.",
+    "purchase_destination": "purchase_url của SKU đang được chọn, dẫn TikTok."
+  },
+  "scoring": {
+    "method": "weighted_affinity",
+    "affinity_range": [
+      0,
+      1
+    ],
+    "rounding": "Math.round",
+    "formula": "raw_percent(product) = 100 * sum(question.weight * selected_option.affinity_by_product[product.id]) / sum(question.weight)",
+    "weights_are": "Trọng số do người thiết kế đề xuất, không phải số liệu nghiên cứu hay điểm do hãng công bố.",
+    "affinity_meaning": {
+      "1": "Khớp trực tiếp với hướng hương mô tả",
+      "0.75_to_0.99": "Khá gần",
+      "0.4_to_0.74": "Tương đồng một phần",
+      "0_to_0.39": "Ít tương đồng"
+    },
+    "interpretation": "Phần trăm là chỉ số khớp gu hương theo luật, không phải xác suất mua, hiệu quả công dụng hoặc độ an toàn trên da.",
+    "candidate_filter": "Chỉ products có id thuộc category.product_ids và category_id khớp nhóm đã chọn.",
+    "require_all_answers": true,
+    "allow_skip": false,
+    "unknown_answer_behavior": "Báo lỗi; không tự gán đáp án hay điểm mặc định.",
+    "weight_zero_behavior": "Vẫn yêu cầu trả lời để cá nhân hóa kết quả; không vào tử số hoặc mẫu số.",
+    "normalization": "Mẫu số chung là tổng trọng số câu có điểm. Không chia cho tổng điểm mọi sản phẩm; tổng phần trăm của các SKU không cần bằng 100.",
+    "no_score_floor": true,
+    "no_forced_winner_100": true,
+    "rank_by": "raw_percent_descending_before_rounding",
+    "tie_epsilon": 1e-06,
+    "tie_policy": {
+      "mode": "show_all_joint_top",
+      "title": "Những mùi hương phù hợp tương đương",
+      "rule": "Áp dụng trên đơn vị xếp hạng sau gộp: SKU với chăm sóc cá nhân, mùi với nước hoa. Hiển thị tất cả đơn vị đồng điểm cao nhất trong tie_epsilon; không đếm hai dung tích cùng mùi là hai kết quả. Sắp thẻ đồng hạng theo ID tăng dần."
+    },
+    "near_tie_policy": {
+      "threshold_percentage_points": 5,
+      "mode": "show_best_plus_one_alternative",
+      "rule": "Sau gộp, nếu không đồng hạng và top 1 hơn top 2 không quá 5 điểm, hiện top 1 và một lựa chọn khác gần tương đương. Nếu nhiều top 2 bằng điểm, chọn ID tăng dần để trình bày ổn định. Không gợi ý dung tích khác của cùng một mùi như phương án thay thế."
+    },
+    "bands": [
+      {
+        "min_inclusive": 85,
+        "max_inclusive": 100,
+        "label": "Rất gần gu của bạn"
+      },
+      {
+        "min_inclusive": 70,
+        "max_exclusive": 85,
+        "label": "Khá hợp gu"
+      },
+      {
+        "min_inclusive": 50,
+        "max_exclusive": 70,
+        "label": "Hợp một phần"
+      },
+      {
+        "min_inclusive": 0,
+        "max_exclusive": 50,
+        "label": "Chưa rõ gu phù hợp"
+      }
+    ],
+    "band_input": "raw_percent",
+    "low_match_policy": {
+      "threshold_below": 50,
+      "title": "Gu của bạn khá đa dạng",
+      "message": "Chưa có mùi nào khớp rõ với các lựa chọn. Bạn có thể xem mô tả hoặc làm lại để chọn hướng hương ưu tiên.",
+      "show_actual_scores": true
+    },
+    "reason_generation": {
+      "source": "selected_option.reason_if_matched",
+      "min_affinity": 0.75,
+      "sort": "question.weight giảm dần, sau đó question.id tăng dần",
+      "max_reasons": 2,
+      "prefix": "Bạn đã chọn: ",
+      "fallback": "Đây là mùi gần nhất trong nhóm theo tổng điểm câu trả lời.",
+      "never_show_unselected_reasons": true,
+      "perfume_rule": "Các SKU cùng mùi có affinity giống nhau nên dùng chung lý do; đổi dung tích không đổi lý do."
+    },
+    "benefit_generation": "Với câu weight = 0, hiển thị Ưu tiên của bạn: + selected_option.personalized_benefit. Đây là ưu tiên người dùng, không phải bằng chứng SKU này hơn SKU khác.",
+    "completion_steps": [
+      "Kiểm tra category_id và đủ đúng một option_id cho mỗi question_id; từ chối ID thừa hoặc không thuộc câu.",
+      "Lọc sản phẩm theo category.product_ids và category_id.",
+      "Tính raw_percent từng SKU; câu weight = 0 không ảnh hưởng điểm.",
+      "Nếu ranking_unit = profile_id, kiểm tra điểm biến thể bằng nhau rồi gộp theo profile_id trước khi xếp hạng.",
+      "Xếp theo raw_percent giảm dần; áp dụng quy tắc điểm thấp, đồng hạng và gần đồng hạng trên đơn vị xếp hạng đã gộp.",
+      "Làm tròn để hiển thị; dùng raw_percent chọn band. Sinh lý do từ đáp án đã chọn.",
+      "Với nước hoa, dựng thẻ mùi và các dung tích theo variant_selection. Chỉ bật mua khi có selected_product_id hợp lệ.",
+      "Khi chọn dung tích, lấy ảnh, tên, dung tích, giá và purchase_url từ đúng SKU. Không thay điểm phù hợp."
+    ],
+    "ranking_unit": "Đọc category.ranking_unit: product_id cho chăm sóc cá nhân; profile_id cho nước hoa.",
+    "grouping_before_ranking": {
+      "when": "category.ranking_unit == profile_id",
+      "group_by": "products.profile_id",
+      "method": "Tính điểm từng SKU bằng công thức chung. Xác nhận mọi SKU cùng profile có raw_percent bằng nhau trong tie_epsilon; dùng điểm chung đó làm điểm mùi. Không cộng điểm các dung tích. Nếu điểm khác nhau, báo lỗi cấu hình.",
+      "deduplicate_before": "Xếp hạng, xử lý đồng điểm, gần đồng điểm và chọn phương án thay thế.",
+      "representative_product": "Không dùng một SKU đại diện làm link mua mặc định cho mùi có nhiều dung tích; áp dụng variant_selection."
+    }
+  },
+  "sources": [
+    {
+      "id": "sheet",
+      "type": "uploaded_workbook",
+      "name": "Tổng hợp.xlsx",
+      "sheet": "Trang tính1",
+      "role": "Danh mục SKU và link TikTok; chỉ lấy dòng 3–20 và 46–49."
+    },
+    {
+      "id": "pdf",
+      "type": "uploaded_pdf",
+      "name": "THÔNG TIN SẢN PHẨM DYNIK - NPD 2026 (2505).pdf",
+      "pages": [
+        12,
+        19,
+        20,
+        21,
+        23,
+        24,
+        26,
+        27,
+        28,
+        31,
+        32,
+        33,
+        34
+      ],
+      "role": "Định hướng sử dụng nước hoa và công dụng chung theo ngành hàng."
+    },
+    {
+      "id": "image2",
+      "type": "uploaded_image",
+      "name": "Trang 2.jpg",
+      "role": "Hai nước hoa mới, tầng hương, dịp sử dụng, dung tích 9ml/50ml."
+    },
+    {
+      "id": "image3",
+      "type": "uploaded_image",
+      "name": "Trang 3.jpg",
+      "role": "Bốn hồ sơ mùi Dynamic, Legend, Oceanic, Urban; thông tin lăn khử mùi."
+    },
+    {
+      "id": "image4",
+      "type": "uploaded_image",
+      "name": "Trang 4.jpg",
+      "role": "Công dụng chung của dầu gội, sữa tắm và tắm gội 5in1."
+    },
+    {
+      "id": "web_breathing_mountain_air",
+      "type": "official_product_page",
+      "url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-breathing-mountain-air-huong-xa-huong-tram-am-50ml-chinh-hang",
+      "accessed_at": "2026-09-29",
+      "role": "Mô tả và tầng hương nước hoa bộ sưu tập đầu tiên."
+    },
+    {
+      "id": "web_bucolic_retreat",
+      "type": "official_product_page",
+      "url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-bucolic-retreat-huong-co-thanh-khiet-50ml-chinh-hang",
+      "accessed_at": "2026-09-29",
+      "role": "Mô tả và tầng hương nước hoa bộ sưu tập đầu tiên."
+    },
+    {
+      "id": "web_swimming_at_riverside",
+      "type": "official_product_page",
+      "url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-swimming-at-riverside-huong-reu-soi-cuon-hut-50ml-chinh-hang",
+      "accessed_at": "2026-09-29",
+      "role": "Mô tả và tầng hương nước hoa bộ sưu tập đầu tiên."
+    },
+    {
+      "id": "web_cocooning_under_snow",
+      "type": "official_product_page",
+      "url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-cocooning-under-snow-huong-go-tinh-te-50ml-chinh-hang",
+      "accessed_at": "2026-09-29",
+      "role": "Mô tả và tầng hương nước hoa bộ sưu tập đầu tiên."
+    },
+    {
+      "id": "sheet_images_20260930",
+      "type": "uploaded_workbook",
+      "name": "Tổng hợp(1).xlsx",
+      "sheet": "Trang tính1",
+      "role": "Cột D (SSC) cung cấp URL ảnh trực tiếp; nhập theo đúng hàng sản phẩm. Chưa xác minh nội dung ảnh hoặc khả năng tải."
+    }
+  ],
+  "fragrance_profiles": [
+    {
+      "id": "dynamic",
+      "name": "Dynamic",
+      "summary": "Cam bergamot mở đầu tươi sáng, kết bằng xạ hương ấm; gợi tinh thần năng động, bứt phá.",
+      "notes": {
+        "opening": [
+          "Cam bergamot"
+        ],
+        "base": [
+          "Xạ hương"
+        ]
+      },
+      "source_ids": [
+        "image3"
+      ]
+    },
+    {
+      "id": "legend",
+      "name": "Legend",
+      "summary": "Nhựa thơm kết hợp xạ hương và gỗ trầm mặc; mang sắc thái bản lĩnh, sang trọng.",
+      "notes": {
+        "opening": [
+          "Nhựa thơm"
+        ],
+        "base": [
+          "Xạ hương",
+          "Gỗ"
+        ]
+      },
+      "source_ids": [
+        "image3"
+      ]
+    },
+    {
+      "id": "oceanic",
+      "name": "Oceanic",
+      "summary": "Cam bergamot và long diên hương gợi tinh thần biển khơi, phóng khoáng.",
+      "notes": {
+        "opening": [
+          "Cam bergamot"
+        ],
+        "base": [
+          "Long diên hương"
+        ]
+      },
+      "source_ids": [
+        "image3"
+      ]
+    },
+    {
+      "id": "urban",
+      "name": "Urban",
+      "summary": "Bạch đậu khấu mở đầu, gỗ đàn hương ở cuối; gợi phong thái hiện đại, lịch lãm.",
+      "notes": {
+        "opening": [
+          "Bạch đậu khấu"
+        ],
+        "base": [
+          "Gỗ đàn hương"
+        ]
+      },
+      "source_ids": [
+        "image3"
+      ]
+    },
+    {
+      "id": "the_mannik",
+      "name": "The Mannik",
+      "summary": "Thảo mộc và cam bergamot trên nền trầm hương, tuyết tùng; dành cho gu phóng khoáng, đồng hành mỗi ngày.",
+      "notes": {
+        "opening": [
+          "Cây xô thơm",
+          "Oải hương",
+          "Cam bergamot"
+        ],
+        "heart": [
+          "Nghệ tây",
+          "Nhựa thơm praline"
+        ],
+        "base": [
+          "Trầm hương",
+          "Gỗ tuyết tùng"
+        ]
+      },
+      "suggested_use": [
+        "Hằng ngày",
+        "Mùa nắng nóng"
+      ],
+      "source_ids": [
+        "image2",
+        "pdf"
+      ]
+    },
+    {
+      "id": "valoren",
+      "name": "Valoren",
+      "summary": "Mận, hương rum và nhựa thơm trên nền gỗ; gợi nét trầm, mạnh mẽ cho tiệc tối hoặc thời tiết mát.",
+      "notes": {
+        "opening": [
+          "Nhựa thơm Elemi",
+          "Mận",
+          "Chanh",
+          "Davana",
+          "Hương rượu rum"
+        ],
+        "heart": [
+          "Hoa hồng",
+          "Nhựa thơm benzoin",
+          "Nhựa thơm Cistus",
+          "Gỗ cam thảo"
+        ],
+        "base": [
+          "Gỗ đàn hương",
+          "Cỏ hương bài",
+          "Gỗ tuyết tùng"
+        ]
+      },
+      "suggested_use": [
+        "Tiệc tối",
+        "Thu đông"
+      ],
+      "source_ids": [
+        "image2",
+        "pdf"
+      ]
+    },
+    {
+      "id": "breathing_mountain_air",
+      "name": "Breathing Mountain Air",
+      "summary": "Gu xạ hương trầm ấm, kết hợp đậu tonka và đàn hương.",
+      "notes": {
+        "opening": [
+          "Nhục đậu khấu",
+          "Cam",
+          "Bạch đậu khấu"
+        ],
+        "heart": [
+          "Hoa lài",
+          "Xô thơm",
+          "Hổ phách"
+        ],
+        "base": [
+          "Đàn hương",
+          "Đậu tonka",
+          "Xạ hương"
+        ]
+      },
+      "source_ids": [
+        "web_breathing_mountain_air"
+      ]
+    },
+    {
+      "id": "bucolic_retreat",
+      "name": "Bucolic Retreat",
+      "summary": "Gu hoa cỏ thanh khiết với lê, trà xanh và nền gỗ.",
+      "notes": {
+        "opening": [
+          "Lê",
+          "Trà xanh",
+          "Chanh"
+        ],
+        "heart": [
+          "Hoa nhài",
+          "Violet",
+          "Linh lan"
+        ],
+        "base": [
+          "Đàn hương",
+          "Hổ phách",
+          "Xạ hương"
+        ]
+      },
+      "source_ids": [
+        "web_bucolic_retreat"
+      ]
+    },
+    {
+      "id": "swimming_at_riverside",
+      "name": "Swimming At Riverside",
+      "summary": "Gu rêu sồi khác biệt, có bergamot, gừng và sắc thái khói thơm.",
+      "notes": {
+        "opening": [
+          "Cam bergamot",
+          "Gừng"
+        ],
+        "heart": [
+          "Rêu sồi",
+          "Hương thảo",
+          "Phong lữ"
+        ],
+        "base": [
+          "Long diên hương",
+          "An tức hương",
+          "Khói thơm"
+        ]
+      },
+      "source_ids": [
+        "web_swimming_at_riverside"
+      ]
+    },
+    {
+      "id": "cocooning_under_snow",
+      "name": "Cocooning Under Snow",
+      "summary": "Gu gỗ tinh tế, mở đầu bạc hà và cam, kết bằng tuyết tùng.",
+      "notes": {
+        "opening": [
+          "Bạc hà",
+          "Cam"
+        ],
+        "heart": [
+          "Hoa nhài",
+          "Trà xanh"
+        ],
+        "base": [
+          "Tuyết tùng",
+          "Hổ phách",
+          "Cỏ hương bài",
+          "Xạ hương"
+        ]
+      },
+      "source_ids": [
+        "web_cocooning_under_snow"
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "deodorant_dynamic",
+      "category_id": "deodorant",
+      "profile_id": "dynamic",
+      "name": "Lăn khử mùi khô thoáng Hương nước hoa Dynik - Dynamic, 50ml",
+      "short_name": "Dynamic",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Hỗ trợ khử mùi, khô thoáng, lưu hương nước hoa. Cam bergamot mở đầu tươi sáng, kết bằng xạ hương ấm; gợi tinh thần năng động, bứt phá.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1YWUsfKyv-ch6ty/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-dynamic-50ml",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp38222_92ad2b2b20e64ae7bf6eea9691b02dd2_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 3,
+        "name_cell": "B3",
+        "purchase_cell": "C3",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-dynamic-50ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "sheet_images_20260930"
+      ],
+      "image_status": "duplicate_url_requires_variant_review",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D3",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp38222_92ad2b2b20e64ae7bf6eea9691b02dd2_master.jpg"
+      }
+    },
+    {
+      "id": "deodorant_legend",
+      "category_id": "deodorant",
+      "profile_id": "legend",
+      "name": "Lăn khử mùi khô thoáng Hương nước hoa Dynik - Legend, 50ml",
+      "short_name": "Legend",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Hỗ trợ khử mùi, khô thoáng, lưu hương nước hoa. Nhựa thơm kết hợp xạ hương và gỗ trầm mặc; mang sắc thái bản lĩnh, sang trọng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D12JCWLTSJ-uFsii/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-legend-50ml",
+      "official_url_status": "corrected_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp38222_92ad2b2b20e64ae7bf6eea9691b02dd2_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 4,
+        "name_cell": "B4",
+        "purchase_cell": "C4",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-dynamic-50ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "sheet_images_20260930"
+      ],
+      "image_status": "duplicate_url_requires_variant_review",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D4",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp38222_92ad2b2b20e64ae7bf6eea9691b02dd2_master.jpg"
+      }
+    },
+    {
+      "id": "deodorant_oceanic",
+      "category_id": "deodorant",
+      "profile_id": "oceanic",
+      "name": "Lăn khử mùi khô thoáng Hương nước hoa Dynik - Oceanic, 50ml",
+      "short_name": "Oceanic",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Hỗ trợ khử mùi, khô thoáng, lưu hương nước hoa. Cam bergamot và long diên hương gợi tinh thần biển khơi, phóng khoáng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1YwrxjFf8-qV7yI/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-oceanic-50ml",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp38224_27ae8399aa6e4dca945158da29f8499b_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 5,
+        "name_cell": "B5",
+        "purchase_cell": "C5",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-oceanic-50ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D5",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp38224_27ae8399aa6e4dca945158da29f8499b_master.jpg"
+      }
+    },
+    {
+      "id": "deodorant_urban",
+      "category_id": "deodorant",
+      "profile_id": "urban",
+      "name": "Lăn khử mùi khô thoáng Hương nước hoa Dynik - Urban, 50ml",
+      "short_name": "Urban",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Hỗ trợ khử mùi, khô thoáng, lưu hương nước hoa. Bạch đậu khấu mở đầu, gỗ đàn hương ở cuối; gợi phong thái hiện đại, lịch lãm.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D128LmGbD2-b76SS/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-urban-50ml",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp38225_f25c30e066c24b0184c6bd66f71d95d3_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 6,
+        "name_cell": "B6",
+        "purchase_cell": "C6",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/lan-khu-mui-kho-thoang-huong-nuoc-hoa-dynik-urban-50ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D6",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp38225_f25c30e066c24b0184c6bd66f71d95d3_master.jpg"
+      }
+    },
+    {
+      "id": "body_wash_legend",
+      "category_id": "body_wash",
+      "profile_id": "legend",
+      "name": "Sữa tắm mát lạnh Hương nước hoa Dynik - Legend, 650g",
+      "short_name": "Legend",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Làm sạch cơ thể, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm. Nhựa thơm kết hợp xạ hương và gỗ trầm mặc; mang sắc thái bản lĩnh, sang trọng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1j184qPXG-8fue1/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/sua-tam-mat-lanh-huong-nuoc-hoa-dynik-legend-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp38227_b4b530bd401c4a73b8c7132baa194540_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 7,
+        "name_cell": "B7",
+        "purchase_cell": "C7",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/sua-tam-mat-lanh-huong-nuoc-hoa-dynik-legend-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D7",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp38227_b4b530bd401c4a73b8c7132baa194540_master.jpg"
+      }
+    },
+    {
+      "id": "body_wash_oceanic",
+      "category_id": "body_wash",
+      "profile_id": "oceanic",
+      "name": "Sữa tắm mát lạnh Hương nước hoa Dynik - Oceanic, 650g",
+      "short_name": "Oceanic",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Làm sạch cơ thể, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm. Cam bergamot và long diên hương gợi tinh thần biển khơi, phóng khoáng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D12TmWbHKs-h2mFN/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": null,
+      "official_url_status": "source_link_wrong_category_correct_url_unverified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28218_1244228cf3e14e3a9b114e3773b817ca_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 8,
+        "name_cell": "B8",
+        "purchase_cell": "C8",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-oceanic-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "duplicate_url_requires_variant_review",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D8",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28218_1244228cf3e14e3a9b114e3773b817ca_master.jpg"
+      }
+    },
+    {
+      "id": "wash_5in1_dynamic",
+      "category_id": "wash_5in1",
+      "profile_id": "dynamic",
+      "name": "Sữa tắm gội 5in1 Hương nước hoa Dynik - Dynamic, 650g",
+      "short_name": "Dynamic",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Làm sạch tóc và cơ thể, hỗ trợ dưỡng, kháng khuẩn và khử mùi. Cam bergamot mở đầu tươi sáng, kết bằng xạ hương ấm; gợi tinh thần năng động, bứt phá.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jdMo6YkQ-WwpgM/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-dynamic-650g",
+      "official_url_status": "verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28211_0969ea5003cc4bf199dd5bd926f40d5e_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 9,
+        "name_cell": "B9",
+        "purchase_cell": "C9",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-dynamic-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D9",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28211_0969ea5003cc4bf199dd5bd926f40d5e_master.jpg"
+      }
+    },
+    {
+      "id": "wash_5in1_legend",
+      "category_id": "wash_5in1",
+      "profile_id": "legend",
+      "name": "Sữa tắm gội 5in1 Hương nước hoa Dynik - Legend, 650g",
+      "short_name": "Legend",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Làm sạch tóc và cơ thể, hỗ trợ dưỡng, kháng khuẩn và khử mùi. Nhựa thơm kết hợp xạ hương và gỗ trầm mặc; mang sắc thái bản lĩnh, sang trọng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jLA7uMRj-8piJb/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-legend-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28214_1208c83fa2d842468516d00c65f86895_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 10,
+        "name_cell": "B10",
+        "purchase_cell": "C10",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-legend-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D10",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28214_1208c83fa2d842468516d00c65f86895_master.jpg"
+      }
+    },
+    {
+      "id": "wash_5in1_oceanic",
+      "category_id": "wash_5in1",
+      "profile_id": "oceanic",
+      "name": "Sữa tắm gội 5in1 Hương nước hoa Dynik - Oceanic, 650g",
+      "short_name": "Oceanic",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Làm sạch tóc và cơ thể, hỗ trợ dưỡng, kháng khuẩn và khử mùi. Cam bergamot và long diên hương gợi tinh thần biển khơi, phóng khoáng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jFtYUcU8-zk8hF/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-oceanic-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28212_4236f08fdc8f40c1a4d269a77e095f66_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 11,
+        "name_cell": "B11",
+        "purchase_cell": "C11",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-oceanic-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D11",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28212_4236f08fdc8f40c1a4d269a77e095f66_master.jpg"
+      }
+    },
+    {
+      "id": "wash_5in1_urban",
+      "category_id": "wash_5in1",
+      "profile_id": "urban",
+      "name": "Sữa tắm gội 5in1 Hương nước hoa Dynik - Urban, 650g",
+      "short_name": "Urban",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Làm sạch tóc và cơ thể, hỗ trợ dưỡng, kháng khuẩn và khử mùi. Bạch đậu khấu mở đầu, gỗ đàn hương ở cuối; gợi phong thái hiện đại, lịch lãm.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jNmd2PbL-xspl2/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-urban-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28215_556de338257847b486721753b9eb7f68_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 12,
+        "name_cell": "B12",
+        "purchase_cell": "C12",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/sua-tam-goi-5in1-huong-nuoc-hoa-dynik-urban-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D12",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28215_556de338257847b486721753b9eb7f68_master.jpg"
+      }
+    },
+    {
+      "id": "shampoo_dynamic",
+      "category_id": "shampoo",
+      "profile_id": "dynamic",
+      "name": "Dầu gội sạch gàu Hương nước hoa Dynik - Dynamic, 650g",
+      "short_name": "Dynamic",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Giúp làm sạch gàu, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm tóc, da đầu. Cam bergamot mở đầu tươi sáng, kết bằng xạ hương ấm; gợi tinh thần năng động, bứt phá.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jFqAD6dy-VOgcE/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-dynamic-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28216_5e33a831d8d64b9b8585b042a8cf0a48_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 13,
+        "name_cell": "B13",
+        "purchase_cell": "C13",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-dynamic-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D13",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28216_5e33a831d8d64b9b8585b042a8cf0a48_master.jpg"
+      }
+    },
+    {
+      "id": "shampoo_legend",
+      "category_id": "shampoo",
+      "profile_id": "legend",
+      "name": "Dầu gội sạch gàu Hương nước hoa Dynik - Legend, 650g",
+      "short_name": "Legend",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Giúp làm sạch gàu, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm tóc, da đầu. Nhựa thơm kết hợp xạ hương và gỗ trầm mặc; mang sắc thái bản lĩnh, sang trọng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jrrEo3wn-QO1RI/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-legend-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28217_977cf37039354133977727796282b8fb_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 14,
+        "name_cell": "B14",
+        "purchase_cell": "C14",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-legend-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D14",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28217_977cf37039354133977727796282b8fb_master.jpg"
+      }
+    },
+    {
+      "id": "shampoo_oceanic",
+      "category_id": "shampoo",
+      "profile_id": "oceanic",
+      "name": "Dầu gội sạch gàu Hương nước hoa Dynik - Oceanic, 650g",
+      "short_name": "Oceanic",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Giúp làm sạch gàu, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm tóc, da đầu. Cam bergamot và long diên hương gợi tinh thần biển khơi, phóng khoáng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jrG8xjyy-IlWIj/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-oceanic-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28218_1244228cf3e14e3a9b114e3773b817ca_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 15,
+        "name_cell": "B15",
+        "purchase_cell": "C15",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-oceanic-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "duplicate_url_requires_variant_review",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D15",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28218_1244228cf3e14e3a9b114e3773b817ca_master.jpg"
+      }
+    },
+    {
+      "id": "shampoo_urban",
+      "category_id": "shampoo",
+      "profile_id": "urban",
+      "name": "Dầu gội sạch gàu Hương nước hoa Dynik - Urban, 650g",
+      "short_name": "Urban",
+      "size": {
+        "value": 650,
+        "unit": "g"
+      },
+      "description_short": "Giúp làm sạch gàu, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm tóc, da đầu. Bạch đậu khấu mở đầu, gỗ đàn hương ở cuối; gợi phong thái hiện đại, lịch lãm.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jSuvR4D3-QDQ3n/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-urban-650g",
+      "official_url_status": "provided_not_individually_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp28219_986f5cda67db4627adb49d1af5ecfa3c_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 16,
+        "name_cell": "B16",
+        "purchase_cell": "C16",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/dau-goi-sach-gau-huong-nuoc-hoa-dynik-urban-650g"
+      },
+      "source_ids": [
+        "sheet",
+        "image3",
+        "image4",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D16",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp28219_986f5cda67db4627adb49d1af5ecfa3c_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_50ml_the_mannik",
+      "category_id": "perfume",
+      "profile_id": "the_mannik",
+      "name": "Nước hoa Dynik The Mannik, 50ml",
+      "short_name": "The Mannik",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Thảo mộc và cam bergamot trên nền trầm hương, tuyết tùng; dành cho gu phóng khoáng, đồng hành mỗi ngày.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jPYVjeQh-nIq33/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-the-mannik-50ml",
+      "official_url_status": "verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp18215_ea32eb84e0bc4bca878dec84f48df20f_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 17,
+        "name_cell": "B17",
+        "purchase_cell": "C17",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-the-mannik-50ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image2",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_50ml",
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D17",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp18215_ea32eb84e0bc4bca878dec84f48df20f_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_50ml_valoren",
+      "category_id": "perfume",
+      "profile_id": "valoren",
+      "name": "Nước hoa Dynik Valoren, 50ml",
+      "short_name": "Valoren",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Mận, hương rum và nhựa thơm trên nền gỗ; gợi nét trầm, mạnh mẽ cho tiệc tối hoặc thời tiết mát.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jfWNYJ77-pPHvN/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-valoren-50ml",
+      "official_url_status": "verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp18214_0c8a7894bf8f4ef6989469c29c1e3c51_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 18,
+        "name_cell": "B18",
+        "purchase_cell": "C18",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-valoren-50ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image2",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_50ml",
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D18",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp18214_0c8a7894bf8f4ef6989469c29c1e3c51_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_9ml_the_mannik",
+      "category_id": "perfume",
+      "profile_id": "the_mannik",
+      "name": "Nước hoa Dynik The Mannik, 9ml",
+      "short_name": "The Mannik",
+      "size": {
+        "value": 9,
+        "unit": "ml"
+      },
+      "description_short": "Thảo mộc và cam bergamot trên nền trầm hương, tuyết tùng; dành cho gu phóng khoáng, đồng hành mỗi ngày.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jaEUVoBG-qEUrO/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-the-mannik-9ml",
+      "official_url_status": "verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp18217_7adba53a1d7e4dd59d69abb1ae18d316_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 19,
+        "name_cell": "B19",
+        "purchase_cell": "C19",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-the-mannik-9ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image2",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_9ml",
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D19",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp18217_7adba53a1d7e4dd59d69abb1ae18d316_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_9ml_valoren",
+      "category_id": "perfume",
+      "profile_id": "valoren",
+      "name": "Nước hoa Dynik Valoren, 9ml",
+      "short_name": "Valoren",
+      "size": {
+        "value": 9,
+        "unit": "ml"
+      },
+      "description_short": "Mận, hương rum và nhựa thơm trên nền gỗ; gợi nét trầm, mạnh mẽ cho tiệc tối hoặc thời tiết mát.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jHFLnw7E-uHEhD/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-valoren-9ml",
+      "official_url_status": "fetch_timed_out",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp18216_5c657d46d68745a5abe95aa896c96900_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 20,
+        "name_cell": "B20",
+        "purchase_cell": "C20",
+        "original_ssc_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-dynik-valoren-9ml"
+      },
+      "source_ids": [
+        "sheet",
+        "image2",
+        "pdf",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_9ml",
+      "image_status": "provided_not_visually_verified",
+      "image_source": {
+        "source_id": "sheet_images_20260930",
+        "cell": "D20",
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp18216_5c657d46d68745a5abe95aa896c96900_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_journey_breathing_mountain_air",
+      "category_id": "perfume",
+      "profile_id": "breathing_mountain_air",
+      "name": "Nước Hoa Nam Cao Cấp DYNIK Breathing Mountain Air - Xạ Hương Trầm Ấm 50ml",
+      "short_name": "Breathing Mountain Air",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Xạ hương trầm ấm kết hợp đậu Tonka và gỗ đàn; mang lại cảm giác tĩnh tại, tự do như hít thở không khí khô thoáng trong lành trên hẻm núi cao.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1j4M1sA6U-56ClX/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-breathing-mountain-air-huong-xa-huong-tram-am-50ml-chinh-hang",
+      "official_url_status": "found_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp18205_dd92c4053645444e9923c2a682b6a796_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 46,
+        "name_cell": "B46",
+        "purchase_cell": "C46",
+        "original_ssc_url": null
+      },
+      "source_ids": [
+        "sheet",
+        "web_breathing_mountain_air",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_journey",
+      "image_status": "fetched_from_official_page",
+      "image_source": {
+        "source_id": "web_breathing_mountain_air",
+        "cell": null,
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp18205_dd92c4053645444e9923c2a682b6a796_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_journey_bucolic_retreat",
+      "category_id": "perfume",
+      "profile_id": "bucolic_retreat",
+      "name": "Nước Hoa Nam Cao Cấp DYNIK Bucolic Retreat - Hương Hoa Cỏ 50ml",
+      "short_name": "Bucolic Retreat",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Hương hoa cỏ Niche thanh khiết từ quả lê nhiệt đới, lá trà xanh và hoa nhài; mở ra chuyến chu du đồng quê yên bình ngập tràn nắng ban mai.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jgUSEBtu-niBQp/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-bucolic-retreat-huong-co-thanh-khiet-50ml-chinh-hang",
+      "official_url_status": "found_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp182012_6fdc7765e06244f79614db441a6525e2_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 47,
+        "name_cell": "B47",
+        "purchase_cell": "C47",
+        "original_ssc_url": null
+      },
+      "source_ids": [
+        "sheet",
+        "web_bucolic_retreat",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_journey",
+      "image_status": "fetched_from_official_page",
+      "image_source": {
+        "source_id": "web_bucolic_retreat",
+        "cell": null,
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp182012_6fdc7765e06244f79614db441a6525e2_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_journey_swimming_at_riverside",
+      "category_id": "perfume",
+      "profile_id": "swimming_at_riverside",
+      "name": "Nước Hoa Nam DYNIK Cao Cấp Swimming At The Riverside - hương rêu sồi cuốn hút 50ml",
+      "short_name": "Swimming At Riverside",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Hương rêu sồi Niche cuốn hút và bí ẩn, hòa cùng bergamot, gừng và vị cay của long diên hương quý hiếm tựa dòng thác mát sâu trong rừng già.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jCWNgHuR-5dcuG/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-swimming-at-riverside-huong-reu-soi-cuon-hut-50ml-chinh-hang",
+      "official_url_status": "found_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp18205_9f0b43de188e45f58b6dd573804fa624_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 48,
+        "name_cell": "B48",
+        "purchase_cell": "C48",
+        "original_ssc_url": null
+      },
+      "source_ids": [
+        "sheet",
+        "web_swimming_at_riverside",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_journey",
+      "image_status": "fetched_from_official_page",
+      "image_source": {
+        "source_id": "web_swimming_at_riverside",
+        "cell": null,
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp18205_9f0b43de188e45f58b6dd573804fa624_master.jpg"
+      }
+    },
+    {
+      "id": "perfume_journey_cocooning_under_snow",
+      "category_id": "perfume",
+      "profile_id": "cocooning_under_snow",
+      "name": "Nước Hoa Nam DYNIK Cao Cấp hương Gỗ Tinh Tế - Cocooning Under Snow 50ml",
+      "short_name": "Cocooning Under Snow",
+      "size": {
+        "value": 50,
+        "unit": "ml"
+      },
+      "description_short": "Hương gỗ tinh tế và vững chãi từ tuyết tùng kết hợp bạc hà buốt lạnh; gợi cảm giác cuộn mền ấm áp bên lò sưởi giữa dốc núi tuyết trắng.",
+      "purchase_url": "https://vt.tiktok.com/ZS9D1jVdPn8Hu-ijm0y/",
+      "purchase_platform": "TikTok",
+      "purchase_link_status": "copied_from_sheet_destination_not_verified",
+      "official_product_url": "https://shop.saigoncosmetics.com/products/nuoc-hoa-nam-cao-cap-dynik-cocooning-under-snow-huong-go-tinh-te-50ml-chinh-hang",
+      "official_url_status": "found_verified",
+      "image_url": "https://cdn.hstatic.net/products/200001145712/sp18203_902242002ca04ea4b48fa413840155a9_master.jpg",
+      "price": null,
+      "source": {
+        "source_id": "sheet",
+        "row": 49,
+        "name_cell": "B49",
+        "purchase_cell": "C49",
+        "original_ssc_url": null
+      },
+      "source_ids": [
+        "sheet",
+        "web_cocooning_under_snow",
+        "sheet_images_20260930"
+      ],
+      "legacy_category_id": "perfume_journey",
+      "image_status": "fetched_from_official_page",
+      "image_source": {
+        "source_id": "web_cocooning_under_snow",
+        "cell": null,
+        "url_as_provided": "https://cdn.hstatic.net/products/200001145712/sp18203_902242002ca04ea4b48fa413840155a9_master.jpg"
+      }
+    }
+  ],
+  "categories": [
+    {
+      "id": "shampoo",
+      "name": "Dầu gội sạch gàu",
+      "sheet_group": "Dầu gội",
+      "product_ids": [
+        "shampoo_dynamic",
+        "shampoo_legend",
+        "shampoo_oceanic",
+        "shampoo_urban"
+      ],
+      "question_count": 4,
+      "estimated_seconds": [
+        30,
+        50
+      ],
+      "duration_status": "Ước tính thiết kế; đo lại bằng dữ liệu thực tế.",
+      "intro": "4 câu ngắn để tìm gu hương của bạn.",
+      "shared_benefit": "Giúp làm sạch gàu, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm tóc, da đầu.",
+      "questions": [
+        {
+          "id": "shampoo_priority",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn chú trọng điều gì khi gội đầu?",
+          "weight": 0,
+          "purpose": "personalize_result_only",
+          "basis": "Công dụng chung theo tài liệu hãng; không có bằng chứng phân biệt hiệu quả giữa các mùi.",
+          "options": [
+            {
+              "id": "shampoo_priority_1",
+              "label": "Giúp làm sạch gàu",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0,
+                "shampoo_legend": 0,
+                "shampoo_oceanic": 0,
+                "shampoo_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Giúp làm sạch gàu"
+            },
+            {
+              "id": "shampoo_priority_2",
+              "label": "Cảm giác mát lạnh sau gội",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0,
+                "shampoo_legend": 0,
+                "shampoo_oceanic": 0,
+                "shampoo_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Cảm giác mát lạnh sau gội"
+            },
+            {
+              "id": "shampoo_priority_3",
+              "label": "Hỗ trợ dưỡng ẩm tóc và da đầu",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0,
+                "shampoo_legend": 0,
+                "shampoo_oceanic": 0,
+                "shampoo_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Hỗ trợ dưỡng ẩm tóc và da đầu"
+            },
+            {
+              "id": "shampoo_priority_4",
+              "label": "Hương nước hoa sau khi gội",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0,
+                "shampoo_legend": 0,
+                "shampoo_oceanic": 0,
+                "shampoo_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Hương nước hoa sau khi gội"
+            }
+          ]
+        },
+        {
+          "id": "shampoo_scent",
+          "type": "single_choice",
+          "required": true,
+          "text": "Kiểu hương nào khiến bạn muốn thử nhất?",
+          "weight": 50,
+          "purpose": "ranking",
+          "basis": "Nốt hương trong Trang 3.jpg; các mức tương đồng là quy tắc biên tập.",
+          "options": [
+            {
+              "id": "shampoo_scent_1",
+              "label": "Cam tươi mở đầu, xạ hương ấm về sau",
+              "affinity_by_product": {
+                "shampoo_dynamic": 1,
+                "shampoo_legend": 0.25,
+                "shampoo_oceanic": 0.6,
+                "shampoo_urban": 0.3
+              },
+              "reason_if_matched": "Cam tươi mở đầu, xạ hương ấm về sau",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_scent_2",
+              "label": "Nhựa thơm và gỗ trầm, sắc thái sang trọng",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.25,
+                "shampoo_legend": 1,
+                "shampoo_oceanic": 0.15,
+                "shampoo_urban": 0.65
+              },
+              "reason_if_matched": "Nhựa thơm và gỗ trầm, sắc thái sang trọng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_scent_3",
+              "label": "Cam bergamot, cảm hứng biển khơi",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.6,
+                "shampoo_legend": 0.15,
+                "shampoo_oceanic": 1,
+                "shampoo_urban": 0.25
+              },
+              "reason_if_matched": "Cam bergamot, cảm hứng biển khơi",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_scent_4",
+              "label": "Gia vị bạch đậu khấu và gỗ đàn hương",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.3,
+                "shampoo_legend": 0.65,
+                "shampoo_oceanic": 0.25,
+                "shampoo_urban": 1
+              },
+              "reason_if_matched": "Gia vị bạch đậu khấu và gỗ đàn hương",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "shampoo_drydown",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn mùi hương để lại sắc thái nào?",
+          "weight": 30,
+          "purpose": "ranking",
+          "basis": "Hương cuối trong Trang 3.jpg; không suy ra thời gian lưu hương.",
+          "options": [
+            {
+              "id": "shampoo_drydown_1",
+              "label": "Ấm áp của xạ hương",
+              "affinity_by_product": {
+                "shampoo_dynamic": 1,
+                "shampoo_legend": 0.7,
+                "shampoo_oceanic": 0.25,
+                "shampoo_urban": 0.5
+              },
+              "reason_if_matched": "Ấm áp của xạ hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_drydown_2",
+              "label": "Trầm mặc của gỗ và xạ hương",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.6,
+                "shampoo_legend": 1,
+                "shampoo_oceanic": 0.2,
+                "shampoo_urban": 0.65
+              },
+              "reason_if_matched": "Trầm mặc của gỗ và xạ hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_drydown_3",
+              "label": "Khoáng đạt của long diên hương",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.3,
+                "shampoo_legend": 0.15,
+                "shampoo_oceanic": 1,
+                "shampoo_urban": 0.2
+              },
+              "reason_if_matched": "Khoáng đạt của long diên hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_drydown_4",
+              "label": "Nồng nàn của gỗ đàn hương",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.4,
+                "shampoo_legend": 0.7,
+                "shampoo_oceanic": 0.2,
+                "shampoo_urban": 1
+              },
+              "reason_if_matched": "Nồng nàn của gỗ đàn hương",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "shampoo_style",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn gu hương của mình thể hiện điều gì?",
+          "weight": 20,
+          "purpose": "ranking",
+          "basis": "Định vị bốn mùi trong Trang 3.jpg; liên hệ phong cách là gợi ý chủ quan.",
+          "options": [
+            {
+              "id": "shampoo_style_1",
+              "label": "Năng động, thích bứt phá",
+              "affinity_by_product": {
+                "shampoo_dynamic": 1,
+                "shampoo_legend": 0.25,
+                "shampoo_oceanic": 0.65,
+                "shampoo_urban": 0.5
+              },
+              "reason_if_matched": "Năng động, thích bứt phá",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_style_2",
+              "label": "Bản lĩnh, thích sự sang trọng",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.3,
+                "shampoo_legend": 1,
+                "shampoo_oceanic": 0.3,
+                "shampoo_urban": 0.65
+              },
+              "reason_if_matched": "Bản lĩnh, thích sự sang trọng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_style_3",
+              "label": "Tự do, phóng khoáng",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.65,
+                "shampoo_legend": 0.2,
+                "shampoo_oceanic": 1,
+                "shampoo_urban": 0.4
+              },
+              "reason_if_matched": "Tự do, phóng khoáng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "shampoo_style_4",
+              "label": "Hiện đại, lịch lãm",
+              "affinity_by_product": {
+                "shampoo_dynamic": 0.5,
+                "shampoo_legend": 0.65,
+                "shampoo_oceanic": 0.4,
+                "shampoo_urban": 1
+              },
+              "reason_if_matched": "Hiện đại, lịch lãm",
+              "personalized_benefit": null
+            }
+          ]
+        }
+      ],
+      "ranking_unit": "product_id"
+    },
+    {
+      "id": "deodorant",
+      "name": "Lăn khử mùi",
+      "sheet_group": "Lăn khử mùi",
+      "product_ids": [
+        "deodorant_dynamic",
+        "deodorant_legend",
+        "deodorant_oceanic",
+        "deodorant_urban"
+      ],
+      "question_count": 4,
+      "estimated_seconds": [
+        30,
+        50
+      ],
+      "duration_status": "Ước tính thiết kế; đo lại bằng dữ liệu thực tế.",
+      "intro": "4 câu ngắn để tìm gu hương của bạn.",
+      "shared_benefit": "Hỗ trợ khử mùi, khô thoáng, lưu hương nước hoa.",
+      "questions": [
+        {
+          "id": "deodorant_priority",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn ưu tiên điều gì ở lăn khử mùi?",
+          "weight": 0,
+          "purpose": "personalize_result_only",
+          "basis": "Công dụng chung theo tài liệu hãng; không có bằng chứng phân biệt hiệu quả giữa các mùi.",
+          "options": [
+            {
+              "id": "deodorant_priority_1",
+              "label": "Giúp hạn chế mùi cơ thể",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0,
+                "deodorant_legend": 0,
+                "deodorant_oceanic": 0,
+                "deodorant_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Giúp hạn chế mùi cơ thể"
+            },
+            {
+              "id": "deodorant_priority_2",
+              "label": "Cảm giác khô thoáng, thấm nhanh",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0,
+                "deodorant_legend": 0,
+                "deodorant_oceanic": 0,
+                "deodorant_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Cảm giác khô thoáng, thấm nhanh"
+            },
+            {
+              "id": "deodorant_priority_3",
+              "label": "Hương thơm cho việc chăm sóc hằng ngày",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0,
+                "deodorant_legend": 0,
+                "deodorant_oceanic": 0,
+                "deodorant_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Hương thơm cho việc chăm sóc hằng ngày"
+            },
+            {
+              "id": "deodorant_priority_4",
+              "label": "Kết hợp khử mùi và hương nước hoa",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0,
+                "deodorant_legend": 0,
+                "deodorant_oceanic": 0,
+                "deodorant_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Kết hợp khử mùi và hương nước hoa"
+            }
+          ]
+        },
+        {
+          "id": "deodorant_scent",
+          "type": "single_choice",
+          "required": true,
+          "text": "Kiểu hương nào khiến bạn muốn thử nhất?",
+          "weight": 50,
+          "purpose": "ranking",
+          "basis": "Nốt hương trong Trang 3.jpg; các mức tương đồng là quy tắc biên tập.",
+          "options": [
+            {
+              "id": "deodorant_scent_1",
+              "label": "Cam tươi mở đầu, xạ hương ấm về sau",
+              "affinity_by_product": {
+                "deodorant_dynamic": 1,
+                "deodorant_legend": 0.25,
+                "deodorant_oceanic": 0.6,
+                "deodorant_urban": 0.3
+              },
+              "reason_if_matched": "Cam tươi mở đầu, xạ hương ấm về sau",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_scent_2",
+              "label": "Nhựa thơm và gỗ trầm, sắc thái sang trọng",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.25,
+                "deodorant_legend": 1,
+                "deodorant_oceanic": 0.15,
+                "deodorant_urban": 0.65
+              },
+              "reason_if_matched": "Nhựa thơm và gỗ trầm, sắc thái sang trọng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_scent_3",
+              "label": "Cam bergamot, cảm hứng biển khơi",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.6,
+                "deodorant_legend": 0.15,
+                "deodorant_oceanic": 1,
+                "deodorant_urban": 0.25
+              },
+              "reason_if_matched": "Cam bergamot, cảm hứng biển khơi",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_scent_4",
+              "label": "Gia vị bạch đậu khấu và gỗ đàn hương",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.3,
+                "deodorant_legend": 0.65,
+                "deodorant_oceanic": 0.25,
+                "deodorant_urban": 1
+              },
+              "reason_if_matched": "Gia vị bạch đậu khấu và gỗ đàn hương",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "deodorant_drydown",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn mùi hương để lại sắc thái nào?",
+          "weight": 30,
+          "purpose": "ranking",
+          "basis": "Hương cuối trong Trang 3.jpg; không suy ra thời gian lưu hương.",
+          "options": [
+            {
+              "id": "deodorant_drydown_1",
+              "label": "Ấm áp của xạ hương",
+              "affinity_by_product": {
+                "deodorant_dynamic": 1,
+                "deodorant_legend": 0.7,
+                "deodorant_oceanic": 0.25,
+                "deodorant_urban": 0.5
+              },
+              "reason_if_matched": "Ấm áp của xạ hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_drydown_2",
+              "label": "Trầm mặc của gỗ và xạ hương",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.6,
+                "deodorant_legend": 1,
+                "deodorant_oceanic": 0.2,
+                "deodorant_urban": 0.65
+              },
+              "reason_if_matched": "Trầm mặc của gỗ và xạ hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_drydown_3",
+              "label": "Khoáng đạt của long diên hương",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.3,
+                "deodorant_legend": 0.15,
+                "deodorant_oceanic": 1,
+                "deodorant_urban": 0.2
+              },
+              "reason_if_matched": "Khoáng đạt của long diên hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_drydown_4",
+              "label": "Nồng nàn của gỗ đàn hương",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.4,
+                "deodorant_legend": 0.7,
+                "deodorant_oceanic": 0.2,
+                "deodorant_urban": 1
+              },
+              "reason_if_matched": "Nồng nàn của gỗ đàn hương",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "deodorant_style",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn gu hương của mình thể hiện điều gì?",
+          "weight": 20,
+          "purpose": "ranking",
+          "basis": "Định vị bốn mùi trong Trang 3.jpg; liên hệ phong cách là gợi ý chủ quan.",
+          "options": [
+            {
+              "id": "deodorant_style_1",
+              "label": "Năng động, thích bứt phá",
+              "affinity_by_product": {
+                "deodorant_dynamic": 1,
+                "deodorant_legend": 0.25,
+                "deodorant_oceanic": 0.65,
+                "deodorant_urban": 0.5
+              },
+              "reason_if_matched": "Năng động, thích bứt phá",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_style_2",
+              "label": "Bản lĩnh, thích sự sang trọng",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.3,
+                "deodorant_legend": 1,
+                "deodorant_oceanic": 0.3,
+                "deodorant_urban": 0.65
+              },
+              "reason_if_matched": "Bản lĩnh, thích sự sang trọng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_style_3",
+              "label": "Tự do, phóng khoáng",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.65,
+                "deodorant_legend": 0.2,
+                "deodorant_oceanic": 1,
+                "deodorant_urban": 0.4
+              },
+              "reason_if_matched": "Tự do, phóng khoáng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "deodorant_style_4",
+              "label": "Hiện đại, lịch lãm",
+              "affinity_by_product": {
+                "deodorant_dynamic": 0.5,
+                "deodorant_legend": 0.65,
+                "deodorant_oceanic": 0.4,
+                "deodorant_urban": 1
+              },
+              "reason_if_matched": "Hiện đại, lịch lãm",
+              "personalized_benefit": null
+            }
+          ]
+        }
+      ],
+      "ranking_unit": "product_id"
+    },
+    {
+      "id": "perfume",
+      "name": "Nước hoa",
+      "sheet_groups": [
+        "Nước hoa 50ml",
+        "Nước hoa 9ml",
+        "Nước hoa cũ"
+      ],
+      "product_ids": [
+        "perfume_50ml_the_mannik",
+        "perfume_50ml_valoren",
+        "perfume_9ml_the_mannik",
+        "perfume_9ml_valoren",
+        "perfume_journey_breathing_mountain_air",
+        "perfume_journey_bucolic_retreat",
+        "perfume_journey_swimming_at_riverside",
+        "perfume_journey_cocooning_under_snow"
+      ],
+      "question_count": 5,
+      "estimated_seconds": [
+        30,
+        50
+      ],
+      "duration_status": "Ước tính thiết kế; đo lại bằng dữ liệu thực tế.",
+      "intro": "4 câu ngắn để tìm gu nước hoa của bạn.",
+      "shared_benefit": "Chọn mùi trước, chọn dung tích có sẵn sau khi xem kết quả.",
+      "ranking_unit": "profile_id",
+      "unique_fragrance_count": 6,
+      "questions": [
+        {
+          "id": "perfume_scene",
+          "type": "single_choice",
+          "required": true,
+          "text": "Không gian hoặc trải nghiệm nào truyền cảm hứng cho bạn nhất?",
+          "weight": 20,
+          "purpose": "ranking",
+          "basis": "Bối cảnh và câu chuyện truyền cảm hứng từ DYNIK Journey & Niche Collection (info.md).",
+          "options": [
+            {
+              "id": "perfume_scene_1",
+              "label": "Chinh phục đỉnh núi cao, hít thở không khí khô thoáng trong lành và tĩnh tại",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.75,
+                "perfume_9ml_the_mannik": 0.75,
+                "perfume_50ml_valoren": 0.35,
+                "perfume_9ml_valoren": 0.35,
+                "perfume_journey_breathing_mountain_air": 1.0,
+                "perfume_journey_bucolic_retreat": 0.35,
+                "perfume_journey_swimming_at_riverside": 0.4,
+                "perfume_journey_cocooning_under_snow": 0.5
+              },
+              "reason_if_matched": "Không gian hẻm núi cao trong lành và tĩnh lặng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_scene_2",
+              "label": "Chuyến chu du đồng quê thanh bình, thảm cỏ xanh mướt ngập tràn nắng mai ấm áp",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.45,
+                "perfume_9ml_the_mannik": 0.45,
+                "perfume_50ml_valoren": 0.25,
+                "perfume_9ml_valoren": 0.25,
+                "perfume_journey_breathing_mountain_air": 0.35,
+                "perfume_journey_bucolic_retreat": 1.0,
+                "perfume_journey_swimming_at_riverside": 0.35,
+                "perfume_journey_cocooning_under_snow": 0.4
+              },
+              "reason_if_matched": "Chuyến chu du đồng quê hoa cỏ thanh khiết",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_scene_3",
+              "label": "Băng qua rừng già rêu phong, khám phá dòng thác nước hùng vĩ ẩn sau màn sương mờ",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.45,
+                "perfume_9ml_the_mannik": 0.45,
+                "perfume_50ml_valoren": 0.4,
+                "perfume_9ml_valoren": 0.4,
+                "perfume_journey_breathing_mountain_air": 0.4,
+                "perfume_journey_bucolic_retreat": 0.35,
+                "perfume_journey_swimming_at_riverside": 1.0,
+                "perfume_journey_cocooning_under_snow": 0.35
+              },
+              "reason_if_matched": "Hành trình rừng sâu và thác nước rêu phong",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_scene_4",
+              "label": "Cuộn mền ấm bên lò sưởi gỗ tí tách giữa dốc núi tuyết trắng buốt lạnh",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.5,
+                "perfume_9ml_the_mannik": 0.5,
+                "perfume_50ml_valoren": 0.75,
+                "perfume_9ml_valoren": 0.75,
+                "perfume_journey_breathing_mountain_air": 0.5,
+                "perfume_journey_bucolic_retreat": 0.35,
+                "perfume_journey_swimming_at_riverside": 0.35,
+                "perfume_journey_cocooning_under_snow": 1.0
+              },
+              "reason_if_matched": "Lò sưởi ấm cúng giữa dốc núi tuyết trắng",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "perfume_opening",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn nốt hương mở đầu mang lại cảm giác gì?",
+          "weight": 25,
+          "purpose": "ranking",
+          "basis": "Tầng hương đầu: Cam bergamot, quả lê, chanh, gừng, bạc hà buốt lạnh và mận chín từ info.md và nguồn chính thức.",
+          "options": [
+            {
+              "id": "perfume_opening_1",
+              "label": "Sảng khoái, phóng khoáng với cam bergamot và thảo mộc tươi",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 1.0,
+                "perfume_9ml_the_mannik": 1.0,
+                "perfume_50ml_valoren": 0.3,
+                "perfume_9ml_valoren": 0.3,
+                "perfume_journey_breathing_mountain_air": 0.5,
+                "perfume_journey_bucolic_retreat": 0.55,
+                "perfume_journey_swimming_at_riverside": 0.65,
+                "perfume_journey_cocooning_under_snow": 0.55
+              },
+              "reason_if_matched": "Hương đầu cam bergamot và thảo mộc tươi",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_opening_2",
+              "label": "Nồng nàn, bí ẩn với mận chín, rượu rum và nhựa thơm",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.35,
+                "perfume_9ml_the_mannik": 0.35,
+                "perfume_50ml_valoren": 1.0,
+                "perfume_9ml_valoren": 1.0,
+                "perfume_journey_breathing_mountain_air": 0.4,
+                "perfume_journey_bucolic_retreat": 0.25,
+                "perfume_journey_swimming_at_riverside": 0.25,
+                "perfume_journey_cocooning_under_snow": 0.2
+              },
+              "reason_if_matched": "Hương đầu mận chín, rượu rum và nhựa thơm",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_opening_3",
+              "label": "Ấm nồng pha chút tươi mới của cam ôn đới cùng gừng hoặc nhục đậu khấu",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.5,
+                "perfume_9ml_the_mannik": 0.5,
+                "perfume_50ml_valoren": 0.35,
+                "perfume_9ml_valoren": 0.35,
+                "perfume_journey_breathing_mountain_air": 1.0,
+                "perfume_journey_bucolic_retreat": 0.3,
+                "perfume_journey_swimming_at_riverside": 1.0,
+                "perfume_journey_cocooning_under_snow": 0.4
+              },
+              "reason_if_matched": "Hương đầu cam ôn đới cùng gừng hoặc nhục đậu khấu",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_opening_4",
+              "label": "Thanh mát trong trẻo từ quả lê nhiệt đới, trà xanh hoặc bạc hà buốt lạnh",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.5,
+                "perfume_9ml_the_mannik": 0.5,
+                "perfume_50ml_valoren": 0.25,
+                "perfume_9ml_valoren": 0.25,
+                "perfume_journey_breathing_mountain_air": 0.3,
+                "perfume_journey_bucolic_retreat": 1.0,
+                "perfume_journey_swimming_at_riverside": 0.4,
+                "perfume_journey_cocooning_under_snow": 1.0
+              },
+              "reason_if_matched": "Hương đầu quả lê, trà xanh hoặc bạc hà buốt lạnh",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "perfume_heart",
+          "type": "single_choice",
+          "required": true,
+          "text": "Khi hương thơm lắng dần, bạn muốn khám phá điều gì?",
+          "weight": 20,
+          "purpose": "ranking",
+          "basis": "Tầng hương giữa: Nghệ tây, hoa hồng, rêu sồi, hoa nhài, violet, linh lan và xô thơm từ info.md.",
+          "options": [
+            {
+              "id": "perfume_heart_1",
+              "label": "Ngọt ấm, sang trọng từ nghệ tây và chút ngọt của praline",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 1.0,
+                "perfume_9ml_the_mannik": 1.0,
+                "perfume_50ml_valoren": 0.5,
+                "perfume_9ml_valoren": 0.5,
+                "perfume_journey_breathing_mountain_air": 0.3,
+                "perfume_journey_bucolic_retreat": 0.3,
+                "perfume_journey_swimming_at_riverside": 0.2,
+                "perfume_journey_cocooning_under_snow": 0.3
+              },
+              "reason_if_matched": "Hương giữa nghệ tây và chút ngọt của praline",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_heart_2",
+              "label": "Quyến rũ, quý phái từ hoa hồng hòa cùng nhựa thơm",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.45,
+                "perfume_9ml_the_mannik": 0.45,
+                "perfume_50ml_valoren": 1.0,
+                "perfume_9ml_valoren": 1.0,
+                "perfume_journey_breathing_mountain_air": 0.35,
+                "perfume_journey_bucolic_retreat": 0.35,
+                "perfume_journey_swimming_at_riverside": 0.25,
+                "perfume_journey_cocooning_under_snow": 0.3
+              },
+              "reason_if_matched": "Hương giữa hoa hồng hòa cùng nhựa thơm",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_heart_3",
+              "label": "Thanh khiết, tao nhã với hoa nhài, violet, linh lan hoặc xô thơm",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.4,
+                "perfume_9ml_the_mannik": 0.4,
+                "perfume_50ml_valoren": 0.3,
+                "perfume_9ml_valoren": 0.3,
+                "perfume_journey_breathing_mountain_air": 0.95,
+                "perfume_journey_bucolic_retreat": 1.0,
+                "perfume_journey_swimming_at_riverside": 0.4,
+                "perfume_journey_cocooning_under_snow": 0.85
+              },
+              "reason_if_matched": "Hương giữa hoa nhài, violet, linh lan hoặc xô thơm",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_heart_4",
+              "label": "Mộc mạc, bí ẩn với rêu sồi rừng sâu và hương thảo",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.4,
+                "perfume_9ml_the_mannik": 0.4,
+                "perfume_50ml_valoren": 0.25,
+                "perfume_9ml_valoren": 0.25,
+                "perfume_journey_breathing_mountain_air": 0.5,
+                "perfume_journey_bucolic_retreat": 0.3,
+                "perfume_journey_swimming_at_riverside": 1.0,
+                "perfume_journey_cocooning_under_snow": 0.4
+              },
+              "reason_if_matched": "Hương giữa rêu sồi rừng sâu và hương thảo",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "perfume_base",
+          "type": "single_choice",
+          "required": true,
+          "text": "Nốt hương nền đọng lại cuối cùng bạn muốn lưu giữ là gì?",
+          "weight": 20,
+          "purpose": "ranking",
+          "basis": "Tầng hương cuối: Gỗ tuyết tùng, đậu Tonka, gỗ đàn hương, long diên hương, hổ phách từ info.md.",
+          "options": [
+            {
+              "id": "perfume_base_1",
+              "label": "Trầm hương quý và gỗ tuyết tùng nam tính",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 1.0,
+                "perfume_9ml_the_mannik": 1.0,
+                "perfume_50ml_valoren": 0.75,
+                "perfume_9ml_valoren": 0.75,
+                "perfume_journey_breathing_mountain_air": 0.4,
+                "perfume_journey_bucolic_retreat": 0.35,
+                "perfume_journey_swimming_at_riverside": 0.3,
+                "perfume_journey_cocooning_under_snow": 0.6
+              },
+              "reason_if_matched": "Nền trầm hương quý và gỗ tuyết tùng nam tính",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_base_2",
+              "label": "Gỗ tuyết tùng cay nhẹ, cỏ hương bài và hổ phách",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.55,
+                "perfume_9ml_the_mannik": 0.55,
+                "perfume_50ml_valoren": 0.6,
+                "perfume_9ml_valoren": 0.6,
+                "perfume_journey_breathing_mountain_air": 0.55,
+                "perfume_journey_bucolic_retreat": 0.5,
+                "perfume_journey_swimming_at_riverside": 0.3,
+                "perfume_journey_cocooning_under_snow": 1.0
+              },
+              "reason_if_matched": "Nền gỗ tuyết tùng cay nhẹ, cỏ hương bài và hổ phách",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_base_3",
+              "label": "Xạ hương trầm ấm, đậu Tonka và đàn hương mộc mạc",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.4,
+                "perfume_9ml_the_mannik": 0.4,
+                "perfume_50ml_valoren": 0.45,
+                "perfume_9ml_valoren": 0.45,
+                "perfume_journey_breathing_mountain_air": 1.0,
+                "perfume_journey_bucolic_retreat": 0.9,
+                "perfume_journey_swimming_at_riverside": 0.25,
+                "perfume_journey_cocooning_under_snow": 0.6
+              },
+              "reason_if_matched": "Nền xạ hương trầm ấm, đậu Tonka và đàn hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_base_4",
+              "label": "Long diên hương quý hiếm, an tức hương và khói thơm",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.35,
+                "perfume_9ml_the_mannik": 0.35,
+                "perfume_50ml_valoren": 0.55,
+                "perfume_9ml_valoren": 0.55,
+                "perfume_journey_breathing_mountain_air": 0.3,
+                "perfume_journey_bucolic_retreat": 0.2,
+                "perfume_journey_swimming_at_riverside": 1.0,
+                "perfume_journey_cocooning_under_snow": 0.3
+              },
+              "reason_if_matched": "Nền long diên hương quý hiếm, an tức hương và khói thơm",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "perfume_character",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn mùi hương đại diện cho phong cách và khí chất nào?",
+          "weight": 15,
+          "purpose": "ranking",
+          "basis": "Phong thái cá nhân: Phóng khoáng hàng ngày, trầm lịch lãm tiệc tối, hay gu nước hoa Niche tinh tế từ info.md.",
+          "options": [
+            {
+              "id": "perfume_character_1",
+              "label": "Phóng khoáng, tự do và năng động đồng hành mỗi ngày",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 1.0,
+                "perfume_9ml_the_mannik": 1.0,
+                "perfume_50ml_valoren": 0.45,
+                "perfume_9ml_valoren": 0.45,
+                "perfume_journey_breathing_mountain_air": 0.55,
+                "perfume_journey_bucolic_retreat": 0.5,
+                "perfume_journey_swimming_at_riverside": 0.45,
+                "perfume_journey_cocooning_under_snow": 0.65
+              },
+              "reason_if_matched": "Phong cách phóng khoáng, tự do và năng động",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_character_2",
+              "label": "Trầm lịch lãm, bí ẩn và quyến rũ cho tiệc tối hoặc thời tiết mát",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.45,
+                "perfume_9ml_the_mannik": 0.45,
+                "perfume_50ml_valoren": 1.0,
+                "perfume_9ml_valoren": 1.0,
+                "perfume_journey_breathing_mountain_air": 0.55,
+                "perfume_journey_bucolic_retreat": 0.3,
+                "perfume_journey_swimming_at_riverside": 0.45,
+                "perfume_journey_cocooning_under_snow": 0.45
+              },
+              "reason_if_matched": "Khí chất trầm lịch lãm, bí ẩn và quyến rũ",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_character_3",
+              "label": "Thanh khiết, thi vị và tinh tế chuẩn gu nước hoa Niche",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.45,
+                "perfume_9ml_the_mannik": 0.45,
+                "perfume_50ml_valoren": 0.3,
+                "perfume_9ml_valoren": 0.3,
+                "perfume_journey_breathing_mountain_air": 0.5,
+                "perfume_journey_bucolic_retreat": 1.0,
+                "perfume_journey_swimming_at_riverside": 0.7,
+                "perfume_journey_cocooning_under_snow": 0.65
+              },
+              "reason_if_matched": "Gu hương Niche thanh khiết, thi vị và tinh tế",
+              "personalized_benefit": null
+            },
+            {
+              "id": "perfume_character_4",
+              "label": "Khác biệt, bản lĩnh với chiều sâu bí ẩn của thiên nhiên",
+              "affinity_by_product": {
+                "perfume_50ml_the_mannik": 0.5,
+                "perfume_9ml_the_mannik": 0.5,
+                "perfume_50ml_valoren": 0.5,
+                "perfume_9ml_valoren": 0.5,
+                "perfume_journey_breathing_mountain_air": 0.85,
+                "perfume_journey_bucolic_retreat": 0.4,
+                "perfume_journey_swimming_at_riverside": 1.0,
+                "perfume_journey_cocooning_under_snow": 0.7
+              },
+              "reason_if_matched": "Bản lĩnh khác biệt với chiều sâu bí ẩn của thiên nhiên",
+              "personalized_benefit": null
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "body_wash",
+      "name": "Sữa tắm mát lạnh",
+      "sheet_group": "Sữa tắm",
+      "product_ids": [
+        "body_wash_legend",
+        "body_wash_oceanic"
+      ],
+      "question_count": 3,
+      "estimated_seconds": [
+        20,
+        35
+      ],
+      "duration_status": "Ước tính thiết kế; đo lại bằng dữ liệu thực tế.",
+      "intro": "3 câu ngắn để tìm gu hương của bạn.",
+      "shared_benefit": "Làm sạch cơ thể, tạo cảm giác mát lạnh và hỗ trợ dưỡng ẩm.",
+      "questions": [
+        {
+          "id": "body_wash_scent",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn thích kiểu hương nào sau khi tắm?",
+          "weight": 60,
+          "purpose": "ranking",
+          "basis": "Legend và Oceanic là hai SKU sữa tắm có trong sheet; điểm thể hiện mức thiên về hai gu hương.",
+          "options": [
+            {
+              "id": "body_wash_scent_1",
+              "label": "Gỗ và nhựa thơm trầm ấm",
+              "affinity_by_product": {
+                "body_wash_legend": 1,
+                "body_wash_oceanic": 0.15
+              },
+              "reason_if_matched": "Gỗ và nhựa thơm trầm ấm",
+              "personalized_benefit": null
+            },
+            {
+              "id": "body_wash_scent_2",
+              "label": "Thiên về gỗ nhưng vẫn thích chút tươi sáng",
+              "affinity_by_product": {
+                "body_wash_legend": 0.8,
+                "body_wash_oceanic": 0.5
+              },
+              "reason_if_matched": "Thiên về gỗ nhưng vẫn thích chút tươi sáng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "body_wash_scent_3",
+              "label": "Thiên về cam tươi và cảm hứng biển",
+              "affinity_by_product": {
+                "body_wash_legend": 0.5,
+                "body_wash_oceanic": 0.8
+              },
+              "reason_if_matched": "Thiên về cam tươi và cảm hứng biển",
+              "personalized_benefit": null
+            },
+            {
+              "id": "body_wash_scent_4",
+              "label": "Cam bergamot, biển khơi phóng khoáng",
+              "affinity_by_product": {
+                "body_wash_legend": 0.15,
+                "body_wash_oceanic": 1
+              },
+              "reason_if_matched": "Cam bergamot, biển khơi phóng khoáng",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "body_wash_finish",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn hương thơm mang lại ấn tượng nào?",
+          "weight": 40,
+          "purpose": "ranking",
+          "basis": "Diễn giải định vị Legend/Oceanic từ Trang 3.jpg; không đánh giá độ mát hay dưỡng ẩm giữa hai SKU.",
+          "options": [
+            {
+              "id": "body_wash_finish_1",
+              "label": "Sang trọng, trầm mặc",
+              "affinity_by_product": {
+                "body_wash_legend": 1,
+                "body_wash_oceanic": 0.2
+              },
+              "reason_if_matched": "Sang trọng, trầm mặc",
+              "personalized_benefit": null
+            },
+            {
+              "id": "body_wash_finish_2",
+              "label": "Lịch lãm nhưng không quá nghiêm túc",
+              "affinity_by_product": {
+                "body_wash_legend": 0.8,
+                "body_wash_oceanic": 0.55
+              },
+              "reason_if_matched": "Lịch lãm nhưng không quá nghiêm túc",
+              "personalized_benefit": null
+            },
+            {
+              "id": "body_wash_finish_3",
+              "label": "Tự do nhưng vẫn có chiều sâu",
+              "affinity_by_product": {
+                "body_wash_legend": 0.55,
+                "body_wash_oceanic": 0.8
+              },
+              "reason_if_matched": "Tự do nhưng vẫn có chiều sâu",
+              "personalized_benefit": null
+            },
+            {
+              "id": "body_wash_finish_4",
+              "label": "Khoáng đạt, gợi cảm giác biển khơi",
+              "affinity_by_product": {
+                "body_wash_legend": 0.2,
+                "body_wash_oceanic": 1
+              },
+              "reason_if_matched": "Khoáng đạt, gợi cảm giác biển khơi",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "body_wash_priority",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn chú trọng điều gì trong lần tắm này?",
+          "weight": 0,
+          "purpose": "personalize_result_only",
+          "basis": "Công dụng chung theo Trang 4.jpg; chỉ cá nhân hóa lời giới thiệu.",
+          "options": [
+            {
+              "id": "body_wash_priority_1",
+              "label": "Làm sạch cơ thể",
+              "affinity_by_product": {
+                "body_wash_legend": 0,
+                "body_wash_oceanic": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Làm sạch cơ thể"
+            },
+            {
+              "id": "body_wash_priority_2",
+              "label": "Cảm giác mát lạnh",
+              "affinity_by_product": {
+                "body_wash_legend": 0,
+                "body_wash_oceanic": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Cảm giác mát lạnh"
+            },
+            {
+              "id": "body_wash_priority_3",
+              "label": "Hỗ trợ dưỡng ẩm da",
+              "affinity_by_product": {
+                "body_wash_legend": 0,
+                "body_wash_oceanic": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Hỗ trợ dưỡng ẩm da"
+            },
+            {
+              "id": "body_wash_priority_4",
+              "label": "Hương nước hoa sau tắm",
+              "affinity_by_product": {
+                "body_wash_legend": 0,
+                "body_wash_oceanic": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Hương nước hoa sau tắm"
+            }
+          ]
+        }
+      ],
+      "ranking_unit": "product_id"
+    },
+    {
+      "id": "wash_5in1",
+      "name": "Tắm gội 5in1",
+      "sheet_group": "Sữa tắm 5in1",
+      "product_ids": [
+        "wash_5in1_dynamic",
+        "wash_5in1_legend",
+        "wash_5in1_oceanic",
+        "wash_5in1_urban"
+      ],
+      "question_count": 4,
+      "estimated_seconds": [
+        30,
+        50
+      ],
+      "duration_status": "Ước tính thiết kế; đo lại bằng dữ liệu thực tế.",
+      "intro": "4 câu ngắn để tìm gu hương của bạn.",
+      "shared_benefit": "Làm sạch tóc và cơ thể, hỗ trợ dưỡng, kháng khuẩn và khử mùi.",
+      "questions": [
+        {
+          "id": "wash_5in1_priority",
+          "type": "single_choice",
+          "required": true,
+          "text": "Điều gì khiến bạn muốn chọn tắm gội 5in1?",
+          "weight": 0,
+          "purpose": "personalize_result_only",
+          "basis": "Công dụng chung theo tài liệu hãng; không có bằng chứng phân biệt hiệu quả giữa các mùi.",
+          "options": [
+            {
+              "id": "wash_5in1_priority_1",
+              "label": "Một chai làm sạch cả tóc và cơ thể",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0,
+                "wash_5in1_legend": 0,
+                "wash_5in1_oceanic": 0,
+                "wash_5in1_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Một chai làm sạch cả tóc và cơ thể"
+            },
+            {
+              "id": "wash_5in1_priority_2",
+              "label": "Dưỡng tóc mềm và da mịn",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0,
+                "wash_5in1_legend": 0,
+                "wash_5in1_oceanic": 0,
+                "wash_5in1_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Dưỡng tóc mềm và da mịn"
+            },
+            {
+              "id": "wash_5in1_priority_3",
+              "label": "Hỗ trợ kháng khuẩn, khử mùi khi tắm",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0,
+                "wash_5in1_legend": 0,
+                "wash_5in1_oceanic": 0,
+                "wash_5in1_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Hỗ trợ kháng khuẩn, khử mùi khi tắm"
+            },
+            {
+              "id": "wash_5in1_priority_4",
+              "label": "Cảm giác mát lạnh cùng hương nước hoa",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0,
+                "wash_5in1_legend": 0,
+                "wash_5in1_oceanic": 0,
+                "wash_5in1_urban": 0
+              },
+              "reason_if_matched": null,
+              "personalized_benefit": "Cảm giác mát lạnh cùng hương nước hoa"
+            }
+          ]
+        },
+        {
+          "id": "wash_5in1_scent",
+          "type": "single_choice",
+          "required": true,
+          "text": "Kiểu hương nào khiến bạn muốn thử nhất?",
+          "weight": 50,
+          "purpose": "ranking",
+          "basis": "Nốt hương trong Trang 3.jpg; các mức tương đồng là quy tắc biên tập.",
+          "options": [
+            {
+              "id": "wash_5in1_scent_1",
+              "label": "Cam tươi mở đầu, xạ hương ấm về sau",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 1,
+                "wash_5in1_legend": 0.25,
+                "wash_5in1_oceanic": 0.6,
+                "wash_5in1_urban": 0.3
+              },
+              "reason_if_matched": "Cam tươi mở đầu, xạ hương ấm về sau",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_scent_2",
+              "label": "Nhựa thơm và gỗ trầm, sắc thái sang trọng",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.25,
+                "wash_5in1_legend": 1,
+                "wash_5in1_oceanic": 0.15,
+                "wash_5in1_urban": 0.65
+              },
+              "reason_if_matched": "Nhựa thơm và gỗ trầm, sắc thái sang trọng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_scent_3",
+              "label": "Cam bergamot, cảm hứng biển khơi",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.6,
+                "wash_5in1_legend": 0.15,
+                "wash_5in1_oceanic": 1,
+                "wash_5in1_urban": 0.25
+              },
+              "reason_if_matched": "Cam bergamot, cảm hứng biển khơi",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_scent_4",
+              "label": "Gia vị bạch đậu khấu và gỗ đàn hương",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.3,
+                "wash_5in1_legend": 0.65,
+                "wash_5in1_oceanic": 0.25,
+                "wash_5in1_urban": 1
+              },
+              "reason_if_matched": "Gia vị bạch đậu khấu và gỗ đàn hương",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "wash_5in1_drydown",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn mùi hương để lại sắc thái nào?",
+          "weight": 30,
+          "purpose": "ranking",
+          "basis": "Hương cuối trong Trang 3.jpg; không suy ra thời gian lưu hương.",
+          "options": [
+            {
+              "id": "wash_5in1_drydown_1",
+              "label": "Ấm áp của xạ hương",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 1,
+                "wash_5in1_legend": 0.7,
+                "wash_5in1_oceanic": 0.25,
+                "wash_5in1_urban": 0.5
+              },
+              "reason_if_matched": "Ấm áp của xạ hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_drydown_2",
+              "label": "Trầm mặc của gỗ và xạ hương",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.6,
+                "wash_5in1_legend": 1,
+                "wash_5in1_oceanic": 0.2,
+                "wash_5in1_urban": 0.65
+              },
+              "reason_if_matched": "Trầm mặc của gỗ và xạ hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_drydown_3",
+              "label": "Khoáng đạt của long diên hương",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.3,
+                "wash_5in1_legend": 0.15,
+                "wash_5in1_oceanic": 1,
+                "wash_5in1_urban": 0.2
+              },
+              "reason_if_matched": "Khoáng đạt của long diên hương",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_drydown_4",
+              "label": "Nồng nàn của gỗ đàn hương",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.4,
+                "wash_5in1_legend": 0.7,
+                "wash_5in1_oceanic": 0.2,
+                "wash_5in1_urban": 1
+              },
+              "reason_if_matched": "Nồng nàn của gỗ đàn hương",
+              "personalized_benefit": null
+            }
+          ]
+        },
+        {
+          "id": "wash_5in1_style",
+          "type": "single_choice",
+          "required": true,
+          "text": "Bạn muốn gu hương của mình thể hiện điều gì?",
+          "weight": 20,
+          "purpose": "ranking",
+          "basis": "Định vị bốn mùi trong Trang 3.jpg; liên hệ phong cách là gợi ý chủ quan.",
+          "options": [
+            {
+              "id": "wash_5in1_style_1",
+              "label": "Năng động, thích bứt phá",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 1,
+                "wash_5in1_legend": 0.25,
+                "wash_5in1_oceanic": 0.65,
+                "wash_5in1_urban": 0.5
+              },
+              "reason_if_matched": "Năng động, thích bứt phá",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_style_2",
+              "label": "Bản lĩnh, thích sự sang trọng",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.3,
+                "wash_5in1_legend": 1,
+                "wash_5in1_oceanic": 0.3,
+                "wash_5in1_urban": 0.65
+              },
+              "reason_if_matched": "Bản lĩnh, thích sự sang trọng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_style_3",
+              "label": "Tự do, phóng khoáng",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.65,
+                "wash_5in1_legend": 0.2,
+                "wash_5in1_oceanic": 1,
+                "wash_5in1_urban": 0.4
+              },
+              "reason_if_matched": "Tự do, phóng khoáng",
+              "personalized_benefit": null
+            },
+            {
+              "id": "wash_5in1_style_4",
+              "label": "Hiện đại, lịch lãm",
+              "affinity_by_product": {
+                "wash_5in1_dynamic": 0.5,
+                "wash_5in1_legend": 0.65,
+                "wash_5in1_oceanic": 0.4,
+                "wash_5in1_urban": 1
+              },
+              "reason_if_matched": "Hiện đại, lịch lãm",
+              "personalized_benefit": null
+            }
+          ]
+        }
+      ],
+      "ranking_unit": "product_id"
+    }
+  ],
+  "data_quality_notes": [
+    {
+      "code": "SSC_D4_MISMATCH",
+      "detail": "D4 trong sheet trỏ Dynamic dù B4 là Legend. official_product_url đã thay bằng trang Legend được xác minh; giữ original_ssc_url để đối chiếu."
+    },
+    {
+      "code": "SSC_D8_MISMATCH",
+      "detail": "D8 trỏ dầu gội Oceanic dù B8 là sữa tắm Oceanic. official_product_url để null do chưa xác minh được trang đúng. Link mua TikTok C8 giữ nguyên."
+    },
+    {
+      "code": "TIKTOK_UNVERIFIED",
+      "detail": "Giữ nguyên toàn bộ link cột C. Thử mở link TikTok đầu tiên không thành công; chưa xác minh đích đến, tồn kho, giá và biến thể của từng link."
+    },
+    {
+      "code": "PRICES_OMITTED",
+      "detail": "Giá trong PDF, JPG và website khác nhau; không dùng giá cố định hoặc khuyến mãi trong quiz."
+    },
+    {
+      "code": "SIZE_CONFLICT_RESOLVED",
+      "detail": "PDF trang 34 ghi 10ml ở danh mục, nhưng sheet và Trang 2.jpg ghi 9ml. Dùng 9ml theo SKU trong sheet."
+    },
+    {
+      "code": "NO_MEDICAL_MATCH",
+      "detail": "Không suy luận loại da, mức độ gàu, dị ứng hoặc hiệu quả điều trị từ quiz chọn mùi."
+    },
+    {
+      "code": "FIVE_CATEGORY_MIGRATION",
+      "detail": "Giữ nguyên product.id và link mua để tương thích asset mapping cũ; category_id của 8 SKU nước hoa đổi thành perfume. Tiền tố perfume_50ml/perfume_9ml/perfume_journey trong product.id chỉ là ID, không tạo nhóm giao diện. Bỏ câu hỏi và câu trả lời nước hoa cũ khi nâng cấp; không tái sử dụng session quiz v1."
+    },
+    {
+      "code": "SCC_DIRECT_IMAGES_IMPORTED",
+      "detail": "Đã nhập 18 image_url trực tiếp từ cột D của Tổng hợp(1).xlsx. official_product_url vẫn là trang thông tin sản phẩm, không phải URL ảnh. Các ghi chú SSC_D4_MISMATCH và SSC_D8_MISMATCH là lịch sử của file Excel ban đầu."
+    },
+    {
+      "code": "DUPLICATE_IMAGE_URLS",
+      "detail": "D3 và D4 dùng cùng URL ảnh cho lăn Dynamic/Legend; D8 và D15 dùng cùng URL ảnh cho sữa tắm Oceanic/dầu gội Oceanic. Giữ nguyên theo file người dùng, chưa xác minh nội dung ảnh. Cần kiểm tra trước khi hiển thị chính thức.",
+      "duplicates": [
+        {
+          "image_url": "https://cdn.hstatic.net/products/200001145712/sp38222_92ad2b2b20e64ae7bf6eea9691b02dd2_master.jpg",
+          "product_ids": [
+            "deodorant_dynamic",
+            "deodorant_legend"
+          ]
+        },
+        {
+          "image_url": "https://cdn.hstatic.net/products/200001145712/sp28218_1244228cf3e14e3a9b114e3773b817ca_master.jpg",
+          "product_ids": [
+            "body_wash_oceanic",
+            "shampoo_oceanic"
+          ]
+        }
+      ]
+    },
+    {
+      "code": "FOUR_IMAGES_MISSING",
+      "detail": "D46–D49 trống: Breathing Mountain Air, Bucolic Retreat, Swimming At Riverside, Cocooning Under Snow vẫn có image_url = null. Không tự tạo link ảnh."
+    }
+  ],
+  "integration": {
+    "format": "JSON thuần UTF-8; không có hàm thực thi. Frontend cần triển khai scoring.completion_steps.",
+    "answer_shape": {
+      "category_id": "deodorant",
+      "answers": {
+        "deodorant_priority": "deodorant_priority_1",
+        "deodorant_scent": "deodorant_scent_1",
+        "deodorant_drydown": "deodorant_drydown_1",
+        "deodorant_style": "deodorant_style_1"
+      }
+    },
+    "result_fields": [
+      "ranking_unit",
+      "recommendation_id",
+      "profile_id",
+      "raw_percent",
+      "display_percent",
+      "band",
+      "reasons",
+      "variant_product_ids",
+      "selected_product_id",
+      "description_short",
+      "image_url",
+      "purchase_url"
+    ],
+    "examples": [
+      {
+        "category_id": "deodorant",
+        "answers": {
+          "deodorant_priority": "deodorant_priority_1",
+          "deodorant_scent": "deodorant_scent_1",
+          "deodorant_drydown": "deodorant_drydown_1",
+          "deodorant_style": "deodorant_style_1"
+        },
+        "expected_raw_percent": {
+          "deodorant_dynamic": 100.0,
+          "deodorant_legend": 38.5,
+          "deodorant_oceanic": 50.5,
+          "deodorant_urban": 40.0
+        }
+      },
+      {
+        "category_id": "body_wash",
+        "answers": {
+          "body_wash_scent": "body_wash_scent_1",
+          "body_wash_finish": "body_wash_finish_4",
+          "body_wash_priority": "body_wash_priority_1"
+        },
+        "expected_raw_percent": {
+          "body_wash_legend": 68.0,
+          "body_wash_oceanic": 49.0
+        }
+      },
+      {
+        "category_id": "perfume",
+        "answers": {
+          "perfume_scene": "perfume_scene_1",
+          "perfume_opening": "perfume_opening_1",
+          "perfume_heart": "perfume_heart_1",
+          "perfume_base": "perfume_base_1",
+          "perfume_character": "perfume_character_1"
+        },
+        "expected_raw_percent_by_profile": {
+          "the_mannik": 95.0,
+          "valoren": 46.25,
+          "breathing_mountain_air": 54.75,
+          "bucolic_retreat": 41.25,
+          "swimming_at_riverside": 41.0,
+          "cocooning_under_snow": 51.5
+        },
+        "expected_top_profile_id": "the_mannik"
+      },
+      {
+        "category_id": "perfume",
+        "answers": {
+          "perfume_scene": "perfume_scene_4",
+          "perfume_opening": "perfume_opening_2",
+          "perfume_heart": "perfume_heart_2",
+          "perfume_base": "perfume_base_1",
+          "perfume_character": "perfume_character_2"
+        },
+        "expected_raw_percent_by_profile": {
+          "the_mannik": 54.5,
+          "valoren": 90.0,
+          "breathing_mountain_air": 43.25,
+          "bucolic_retreat": 31.75,
+          "swimming_at_riverside": 31.0,
+          "cocooning_under_snow": 49.75
+        },
+        "expected_top_profile_id": "valoren"
+      },
+      {
+        "category_id": "perfume",
+        "answers": {
+          "perfume_scene": "perfume_scene_1",
+          "perfume_opening": "perfume_opening_3",
+          "perfume_heart": "perfume_heart_3",
+          "perfume_base": "perfume_base_3",
+          "perfume_character": "perfume_character_4"
+        },
+        "expected_raw_percent_by_profile": {
+          "the_mannik": 51.0,
+          "valoren": 38.25,
+          "breathing_mountain_air": 96.75,
+          "bucolic_retreat": 58.5,
+          "swimming_at_riverside": 61.0,
+          "cocooning_under_snow": 59.5
+        },
+        "expected_top_profile_id": "breathing_mountain_air"
+      },
+      {
+        "category_id": "perfume",
+        "answers": {
+          "perfume_scene": "perfume_scene_2",
+          "perfume_opening": "perfume_opening_4",
+          "perfume_heart": "perfume_heart_3",
+          "perfume_base": "perfume_base_3",
+          "perfume_character": "perfume_character_3"
+        },
+        "expected_raw_percent_by_profile": {
+          "the_mannik": 44.25,
+          "valoren": 30.75,
+          "breathing_mountain_air": 61.0,
+          "bucolic_retreat": 98.0,
+          "swimming_at_riverside": 40.5,
+          "cocooning_under_snow": 71.75
+        },
+        "expected_top_profile_id": "bucolic_retreat"
+      },
+      {
+        "category_id": "perfume",
+        "answers": {
+          "perfume_scene": "perfume_scene_3",
+          "perfume_opening": "perfume_opening_3",
+          "perfume_heart": "perfume_heart_4",
+          "perfume_base": "perfume_base_4",
+          "perfume_character": "perfume_character_4"
+        },
+        "expected_raw_percent_by_profile": {
+          "the_mannik": 44.0,
+          "valoren": 40.25,
+          "breathing_mountain_air": 61.75,
+          "bucolic_retreat": 30.5,
+          "swimming_at_riverside": 100.0,
+          "cocooning_under_snow": 41.5
+        },
+        "expected_top_profile_id": "swimming_at_riverside"
+      },
+      {
+        "category_id": "perfume",
+        "answers": {
+          "perfume_scene": "perfume_scene_4",
+          "perfume_opening": "perfume_opening_4",
+          "perfume_heart": "perfume_heart_3",
+          "perfume_base": "perfume_base_2",
+          "perfume_character": "perfume_character_1"
+        },
+        "expected_raw_percent_by_profile": {
+          "the_mannik": 56.5,
+          "valoren": 46.0,
+          "breathing_mountain_air": 55.75,
+          "bucolic_retreat": 69.5,
+          "swimming_at_riverside": 37.75,
+          "cocooning_under_snow": 91.75
+        },
+        "expected_top_profile_id": "cocooning_under_snow"
+      }
+    ],
+    "migration": {
+      "previous_schema_version": "1.0.0",
+      "new_schema_version": "2.0.0",
+      "replace_data_file_entirely": true,
+      "legacy_category_mapping": {
+        "perfume_50ml": "perfume",
+        "perfume_9ml": "perfume",
+        "perfume_journey": "perfume"
+      },
+      "reset_saved_quiz_answers": true,
+      "frontend_change_required": "Frontend phải hỗ trợ gộp profile_id và chọn variant; không chỉ thay tên nhóm. Màn hình đầu dùng đúng 5 category trong JSON."
+    },
+    "image_update": {
+      "version": "2.0.1",
+      "source_file": "Tổng hợp(1).xlsx",
+      "updated_image_url_count": 18,
+      "missing_image_url_count": 4,
+      "duplicate_url_groups": 2,
+      "mapping": "SKU theo tên chính xác và hàng nguồn; image_url lấy giá trị cột D. purchase_url lấy nguyên giá trị hiện có đã đối chiếu cột C.",
+      "question_and_scoring_changes": false
+    }
+  },
+  "validation": {
+    "status": "passed",
+    "checks": [
+      "5 nhóm, 22 SKU, 19 câu, mỗi câu 4 đáp án",
+      "Tên, ID SKU, dung tích và link mua giữ nguyên",
+      "Mỗi mùi trong 6 mùi nước hoa đều có thể đứng đầu riêng biệt",
+      "Hai dung tích cùng mùi luôn có điểm bằng nhau",
+      "Gộp mùi trước khi xếp hạng, không nhân đôi kết quả theo dung tích",
+      "Không có combo",
+      "Phần trăm trong khoảng 0–100 trên toàn bộ tổ hợp"
+    ],
+    "categories": [
+      {
+        "category_id": "shampoo",
+        "answer_combinations_checked": 256,
+        "every_recommendation_can_rank_first": true,
+        "tie_combinations": 4
+      },
+      {
+        "category_id": "deodorant",
+        "answer_combinations_checked": 256,
+        "every_recommendation_can_rank_first": true,
+        "tie_combinations": 4
+      },
+      {
+        "category_id": "perfume",
+        "answer_combinations_checked": 1024,
+        "every_recommendation_can_rank_first": true,
+        "tie_combinations": 0
+      },
+      {
+        "category_id": "body_wash",
+        "answer_combinations_checked": 64,
+        "every_recommendation_can_rank_first": true,
+        "tie_combinations": 0
+      },
+      {
+        "category_id": "wash_5in1",
+        "answer_combinations_checked": 256,
+        "every_recommendation_can_rank_first": true,
+        "tie_combinations": 4
+      }
+    ],
+    "image_update": {
+      "mapping_check": "passed",
+      "all_18_urls_equal_updated_sheet": true,
+      "questions_scoring_and_purchase_links_unchanged": true,
+      "visual_verification": "not_performed",
+      "missing_images": 4,
+      "duplicate_url_groups": 2
+    }
+  },
+  "updated_at": "2026-09-30",
+  "variant_selection": {
+    "category_id": "perfume",
+    "groups": [
+      {
+        "profile_id": "the_mannik",
+        "name": "The Mannik",
+        "product_ids": [
+          "perfume_9ml_the_mannik",
+          "perfume_50ml_the_mannik"
+        ],
+        "variants": [
+          {
+            "product_id": "perfume_9ml_the_mannik",
+            "label": "9ml"
+          },
+          {
+            "product_id": "perfume_50ml_the_mannik",
+            "label": "50ml"
+          }
+        ],
+        "default_product_id": null
+      },
+      {
+        "profile_id": "valoren",
+        "name": "Valoren",
+        "product_ids": [
+          "perfume_9ml_valoren",
+          "perfume_50ml_valoren"
+        ],
+        "variants": [
+          {
+            "product_id": "perfume_9ml_valoren",
+            "label": "9ml"
+          },
+          {
+            "product_id": "perfume_50ml_valoren",
+            "label": "50ml"
+          }
+        ],
+        "default_product_id": null
+      },
+      {
+        "profile_id": "breathing_mountain_air",
+        "name": "Breathing Mountain Air",
+        "product_ids": [
+          "perfume_journey_breathing_mountain_air"
+        ],
+        "variants": [
+          {
+            "product_id": "perfume_journey_breathing_mountain_air",
+            "label": "50ml"
+          }
+        ],
+        "default_product_id": "perfume_journey_breathing_mountain_air"
+      },
+      {
+        "profile_id": "bucolic_retreat",
+        "name": "Bucolic Retreat",
+        "product_ids": [
+          "perfume_journey_bucolic_retreat"
+        ],
+        "variants": [
+          {
+            "product_id": "perfume_journey_bucolic_retreat",
+            "label": "50ml"
+          }
+        ],
+        "default_product_id": "perfume_journey_bucolic_retreat"
+      },
+      {
+        "profile_id": "swimming_at_riverside",
+        "name": "Swimming At Riverside",
+        "product_ids": [
+          "perfume_journey_swimming_at_riverside"
+        ],
+        "variants": [
+          {
+            "product_id": "perfume_journey_swimming_at_riverside",
+            "label": "50ml"
+          }
+        ],
+        "default_product_id": "perfume_journey_swimming_at_riverside"
+      },
+      {
+        "profile_id": "cocooning_under_snow",
+        "name": "Cocooning Under Snow",
+        "product_ids": [
+          "perfume_journey_cocooning_under_snow"
+        ],
+        "variants": [
+          {
+            "product_id": "perfume_journey_cocooning_under_snow",
+            "label": "50ml"
+          }
+        ],
+        "default_product_id": "perfume_journey_cocooning_under_snow"
+      }
+    ],
+    "selection_label": "Chọn dung tích",
+    "multiple_variants": {
+      "require_explicit_selection": true,
+      "default_product_id": null,
+      "buy_button_enabled": false,
+      "unselected_image_behavior": "Hiển thị ảnh SCC của biến thể nhỏ nhất có ảnh đã xác minh trong nhóm, kèm dung tích rõ ràng. Đây chỉ là ảnh xem trước, không tự chọn dung tích mua; nếu mọi image_url đều null thì dùng text fallback.",
+      "on_select": "Cập nhật selected_product_id, tên đầy đủ, size, image_url, price và purchase_url từ cùng một bản ghi products; bật nút mua. Giữ nguyên % và lý do theo mùi."
+    },
+    "single_variant": {
+      "auto_select": true,
+      "show_size_label": true
+    },
+    "switch_recommendation": "Xóa lựa chọn dung tích trước đó; áp dụng lại quy tắc cho mùi mới.",
+    "image_fallback": "Khi SKU đã chọn thiếu ảnh, dùng text fallback, không giữ ảnh của SKU trước.",
+    "score_unchanged_on_size_change": true
+  }
+}
