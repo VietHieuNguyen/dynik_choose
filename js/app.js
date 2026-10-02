@@ -498,7 +498,7 @@
     wrap.innerHTML = `
       <span class="variant-picker__label">${escapeHtml(entry.variant_label || "Bước cuối: Chọn dung tích bạn muốn mua")}</span>
       <div class="variant-picker__options" role="group" aria-label="Chọn dung tích"></div>
-      <span class="variant-picker__hint">👇 Vui lòng chọn dung tích (9ml hoặc 50ml) để mở nút mua hàng TikTok Shop.</span>
+      <span class="variant-picker__hint">Vui lòng chọn dung tích (9ml hoặc 50ml) để mở nút mua hàng TikTok Shop.</span>
     `;
     const list = wrap.querySelector(".variant-picker__options");
     const hint = wrap.querySelector(".variant-picker__hint");
@@ -521,7 +521,7 @@
           el.setAttribute("aria-pressed", sel ? "true" : "false");
         });
         DynikScoring.selectVariant(state.cfg, entry, p.id);
-        hint.textContent = `✅ Đã chọn chai ${p.size.value} ${p.size.unit}. Bấm nút mua ngay bên dưới để mở TikTok Shop:`;
+        hint.textContent = `Đã chọn chai ${p.size.value} ${p.size.unit}. Bấm nút mua ngay bên dưới để mở TikTok Shop:`;
 
         // update preview image: if this product has an image_url, show it; otherwise clear
         const media = $(".result__media");
