@@ -6,38 +6,38 @@
    =========================================================== */
 
 :root {
-  /* Surface & Backgrounds: Fresh pearl white & delicate mineral tones */
-  --bg: #FAF9F5;
-  --bg-soft: #F0ECE1;
+  /* Surface & Backgrounds: Warm Alabaster / Crisp Porcelain White */
+  --bg: #FFFFFF;
+  --bg-page: #F8F7F4;
   --surface: #FFFFFF;
-  --surface-2: #F5F2EB;
-  --surface-podium: radial-gradient(circle at 50% 38%, #FFFFFF 0%, #EFEBE0 100%);
+  --surface-2: #F6F4EE;
+  --surface-podium: radial-gradient(circle at 50% 45%, #FFFFFF 30%, #F2EFE8 100%);
   
-  /* Text & Ink: High-contrast obsidian & rich pine-charcoal */
-  --text: #0E1A13;
-  --text-mute: #33473B;
-  --text-dim: #5B7064;
-  --text-faint: #8E9F95;
+  /* Text & Ink: Deep Pine Charcoal & Obsidian */
+  --text: #121E17;
+  --text-mute: #3A4C42;
+  --text-dim: #607469;
+  --text-faint: #91A398;
 
-  /* Accent: Royal Deep Emerald (masculine, prestigious, luxurious) */
-  --sage: #1D6948;
-  --sage-dark: #0F3B28;
-  --sage-light: #ECF6F0;
-  --sage-hover: #165338;
-  --sage-border: #B2D8C3;
+  /* Accent: Deep Pine Forest (Signature Masculine Luxury Emerald) */
+  --sage: #1A5336;
+  --sage-dark: #0E3422;
+  --sage-light: #EEF6F1;
+  --sage-hover: #14432B;
+  --sage-border: #BCD9C8;
 
-  /* Accent: Refined Warm Champagne Gold */
-  --gold: #C59844;
-  --gold-dark: #8F6A1E;
-  --gold-light: #FAF4E8;
-  --gold-border: #E8D6B0;
+  /* Accent: Refined Antique Champagne Gold */
+  --gold: #BD8B32;
+  --gold-dark: #87601A;
+  --gold-light: #FAF4E6;
+  --gold-border: #E8D7B0;
 
   /* Danger / Notice */
-  --danger: #B83A3A;
+  --danger: #BA3C3C;
 
   /* Borders & Dividers */
-  --line: #E1DDD2;
-  --line-soft: #ECE8DD;
+  --line: #E5E1D7;
+  --line-soft: #EDEAE2;
 
   /* Radii */
   --radius-lg: 20px;
@@ -46,10 +46,10 @@
   --radius-pill: 9999px;
 
   /* Elevation */
-  --shadow-1: 0 2px 10px rgba(14, 26, 19, 0.04), 0 1px 3px rgba(14, 26, 19, 0.02);
-  --shadow-2: 0 12px 32px rgba(14, 26, 19, 0.07), 0 3px 8px rgba(14, 26, 19, 0.03);
-  --shadow-hover: 0 14px 36px rgba(14, 26, 19, 0.1), 0 4px 12px rgba(14, 26, 19, 0.04);
-  --shadow-glow: 0 6px 20px rgba(29, 105, 72, 0.28);
+  --shadow-1: 0 2px 8px rgba(18, 30, 23, 0.04), 0 1px 3px rgba(18, 30, 23, 0.02);
+  --shadow-2: 0 10px 28px rgba(18, 30, 23, 0.06), 0 2px 6px rgba(18, 30, 23, 0.02);
+  --shadow-hover: 0 12px 32px rgba(18, 30, 23, 0.09), 0 4px 10px rgba(18, 30, 23, 0.03);
+  --shadow-glow: 0 4px 16px rgba(26, 83, 54, 0.22);
 
   /* Typography: Highly legible, modern Vietnamese fonts */
   --font-sans: "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -62,10 +62,10 @@
 html, body {
   margin: 0;
   padding: 0;
-  background-color: #F5F6F8;
+  background-color: #F8F7F4;
   background-image: 
-    radial-gradient(1200px 700px at 50% -10%, #FFFFFF 0%, transparent 70%),
-    linear-gradient(180deg, #F9FAFB 0%, #EEF2F6 100%);
+    radial-gradient(1000px 600px at 50% 0%, #FFFFFF 0%, transparent 80%),
+    linear-gradient(180deg, #FAF9F6 0%, #F2F0EB 100%);
   color: var(--text);
   font-family: var(--font-sans);
   font-size: 15px;
@@ -478,38 +478,41 @@ ul, ol, li { list-style: none; margin: 0; padding: 0; }
 .result {
   display: flex;
   flex-direction: column;
-  gap: 16px;
   background: var(--surface);
   border: 1.5px solid var(--line);
-  border-radius: 18px;
-  padding: 18px 16px;
+  border-radius: 20px;
+  overflow: hidden;
   box-shadow: var(--shadow-2);
   width: 100%;
+  padding: 0;
+  gap: 0;
 }
 
-/* Media Box (Product Image from anhdaidien1) */
+/* Media Box (Product Image from anhdaidien1) — Full-bleed coverfit hero */
 .result__media {
   width: 100%;
-  max-width: 280px;
-  margin: 0 auto;
   aspect-ratio: 1 / 1;
-  border-radius: 16px;
   background: var(--surface-podium);
-  border: 1.5px solid var(--line-soft);
+  border: none;
+  border-bottom: 1px solid var(--line-soft);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 12px;
-  box-shadow: var(--shadow-1);
+  position: relative;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 .result__media img.result__media-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-  display: block;
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.1));
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  padding: 0 !important;
+  margin: 0 !important;
   transition: transform 300ms ease;
 }
 .result__media:hover img.result__media-img {
@@ -517,7 +520,7 @@ ul, ol, li { list-style: none; margin: 0; padding: 0; }
 }
 
 .result__media.is-missing {
-  padding: 20px;
+  padding: 24px !important;
   background: var(--surface-podium);
   flex-direction: column;
 }
@@ -535,8 +538,10 @@ ul, ol, li { list-style: none; margin: 0; padding: 0; }
 .result__body {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   width: 100%;
+  padding: 18px 16px 20px;
+  box-sizing: border-box;
 }
 .result__category {
   font-size: 10.5px;
@@ -952,11 +957,11 @@ button svg {
   background: linear-gradient(135deg, var(--sage), var(--sage-dark)) !important;
   color: #FFFFFF !important;
   border: 1.5px solid var(--sage) !important;
-  box-shadow: 0 4px 16px rgba(15, 59, 40, 0.3) !important;
+  box-shadow: 0 4px 14px rgba(26, 83, 54, 0.25) !important;
 }
 .btn--primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--sage-hover), #0A2B1D) !important;
-  box-shadow: 0 6px 20px rgba(15, 59, 40, 0.4) !important;
+  background: linear-gradient(135deg, var(--sage-hover), #0A2618) !important;
+  box-shadow: 0 6px 18px rgba(26, 83, 54, 0.35) !important;
   transform: translateY(-1px);
 }
 .btn--primary:disabled,
@@ -992,34 +997,35 @@ button svg {
 }
 .btn--full { width: 100%; }
 
-/* Sticky buy bar */
+/* Sticky buy bar — smooth slide in when scrolling past primary buy button */
 .sticky-buy {
   position: fixed;
   bottom: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateY(100%);
   width: 100%;
   max-width: 480px;
   padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
-  background: rgba(247, 245, 240, 0.96);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid var(--line);
+  box-shadow: 0 -4px 16px rgba(18, 30, 23, 0.08);
   z-index: 99;
   box-sizing: border-box;
-  display: none;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), opacity 260ms ease;
+  opacity: 0;
+  pointer-events: none;
+  display: block;
 }
 .sticky-buy.is-visible {
-  display: block;
-  animation: slide-up 260ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-@keyframes slide-up {
-  from { transform: translate(-50%, 100%); }
-  to { transform: translate(-50%, 0); }
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+  pointer-events: auto;
 }
 .sticky-buy .btn {
-  min-height: 46px;
-  font-size: 14px;
+  min-height: 48px;
+  font-size: 14.5px;
 }
 
 /* Footer */

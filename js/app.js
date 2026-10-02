@@ -642,12 +642,45 @@
     });
   }
 
+  function updateStickyVisibility() {
+    const sticky = $("#sticky-buy");
+    if (!sticky) return;
+    const isResultActive = $("#screen-result") && $("#screen-result").classList.contains("is-active");
+    if (!isResultActive || !state.recommendation) {
+      sticky.classList.remove("is-visible");
+      return;
+    }
+    const top = state.recommendation.top[0];
+    if (!top || (top.kind === "fragrance" && !top.single_variant && !top.selected_product)) {
+      sticky.classList.remove("is-visible");
+      return;
+    }
+
+    const mainActions = $(".result__actions");
+    if (!mainActions) {
+      sticky.classList.remove("is-visible");
+      return;
+    }
+
+    const rect = mainActions.getBoundingClientRect();
+    // When the in-page main buy button is in the viewport, HIDE the sticky buy button!
+    // Ensures only 1 buy button is EVER visible on screen at a time.
+    const isMainButtonVisible = rect.top < window.innerHeight && rect.bottom > 0;
+    
+    // Only show sticky bar if user has scrolled PAST the in-page button (it is above the viewport)
+    if (!isMainButtonVisible && rect.bottom <= 0) {
+      sticky.classList.add("is-visible");
+    } else {
+      sticky.classList.remove("is-visible");
+    }
+  }
+
   function renderStickyBuy() {
     const sticky = $("#sticky-buy");
     if (!sticky) return;
     const rec = state.recommendation;
     const isResultActive = $("#screen-result") && $("#screen-result").classList.contains("is-active");
-    if (!rec || !isResultActive || window.innerWidth > 640) {
+    if (!rec || !isResultActive) {
       sticky.classList.remove("is-visible");
       sticky.innerHTML = "";
       return;
@@ -662,10 +695,15 @@
     const btn = buildBuyButton(top);
     btn.classList.add("btn--full");
     sticky.appendChild(btn);
-    sticky.classList.add("is-visible");
+
+    updateStickyVisibility();
   }
 
-  window.addEventListener("resize", () => renderStickyBuy());
+  window.addEventListener("scroll", updateStickyVisibility, { passive: true });
+  window.addEventListener("resize", () => {
+    renderStickyBuy();
+    updateStickyVisibility();
+  });
 
   function buildAlternativeBlock(alt, rec) {
     const wrap = document.createElement("section");
