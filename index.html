@@ -4,20 +4,26 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <meta name="theme-color" content="#F7F5F0" />
-    <meta name="description" content="DYNIK — Trắc nghiệm gợi ý gu hương. Tìm mùi hương DYNIK phù hợp với bạn qua vài câu hỏi." />
-    <title>Trắc nghiệm gu hương</title>
+    <meta name="description" content="DYNIK — Vài câu hỏi ngắn giúp gợi ý mùi hương và sản phẩm phù hợp nhất với bạn." />
+    <title>DYNIK — Gợi ý sản phẩm phù hợp</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
     <a class="visually-hidden" href="#main">Bỏ qua đến nội dung chính</a>
 
-    <main class="shell" id="main">
+    <div class="page-container">
+      <header class="app-header">
+        <a href="#" class="app-header__brand" id="header-logo-link" aria-label="DYNIK">
+          <img src="assets/logo-dynik.png" alt="DYNIK" class="app-header__logo" />
+        </a>
+      </header>
+
+      <main class="shell" id="main">
       <!-- Category selection -->
       <section class="screen is-active" id="screen-categories" aria-labelledby="intro-title">
-        <p class="eyebrow" id="intro-eyebrow">Trắc nghiệm gu hương</p>
         <h1 class="h1" id="intro-title">Chọn loại sản phẩm</h1>
         <p class="lede" id="intro-lede">Vài câu hỏi ngắn giúp gợi ý mùi hương phù hợp nhất với bạn.</p>
         <div class="category-grid" id="category-grid" role="list"></div>
@@ -46,8 +52,9 @@
         Mua sắm trên TikTok Shop
       </footer>
     </main>
+  </div>
 
-    <script src="js/assets.js" defer></script>
+  <script src="js/assets.js" defer></script>
     <script src="js/scoring.js" defer></script>
     <script src="js/app.js" defer></script>
   </body>

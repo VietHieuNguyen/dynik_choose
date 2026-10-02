@@ -20,17 +20,16 @@
   const uiCopy = {
     categorySelectionTitle: "Chọn loại sản phẩm",
     categorySelectionLede: "Vài câu hỏi ngắn giúp gợi ý mùi hương phù hợp nhất với bạn.",
-    eyebrow: "Trắc nghiệm gu hương",
     back: "Quay lại",
     continue: "Tiếp tục",
     final: "Xem kết quả",
     retake: "Làm lại",
-    changeCategory: "Chọn loại sản phẩm khác",
+    changeCategory: "Chọn loại khác",
     buy: "Mua ngay trên TikTok Shop",
-    scoreLabel: "Phù hợp với gu hương",
-    scoreCaption: "Điểm gợi ý dựa trên câu trả lời của bạn.",
-    nearTieTitle: "Cũng gần tương đương",
-    jointTitle: "Những mùi hương phù hợp tương đương",
+    scoreLabel: "Độ phù hợp",
+    scoreCaption: "Dựa trên câu trả lời của bạn.",
+    nearTieTitle: "Gợi ý tương đương",
+    jointTitle: "Các lựa chọn phù hợp tương đương",
     errorLoad: "Không tải được dữ liệu sản phẩm. Vui lòng thử lại.",
     errorRetry: "Thử lại",
     benefitLabel: "Ưu tiên của bạn",
@@ -79,6 +78,11 @@
     $("#retry-button")?.addEventListener("click", () => {
       location.reload();
     });
+    $("#header-logo-link")?.addEventListener("click", (e) => {
+      e.preventDefault();
+      renderCategories();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
   }
 
   async function loadConfig() {
@@ -123,10 +127,8 @@
    * ---------------------------------------------------------- */
   function renderCategories() {
     const grid = $("#category-grid");
-    const introEyebrow = $("#intro-eyebrow");
     const introTitle = $("#intro-title");
     const introLede = $("#intro-lede");
-    if (introEyebrow) introEyebrow.textContent = uiCopy.eyebrow;
     if (introTitle) introTitle.textContent = uiCopy.categorySelectionTitle;
     if (introLede) introLede.textContent = uiCopy.categorySelectionLede;
 
@@ -144,7 +146,7 @@
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "category-card";
-    btn.setAttribute("aria-label", `Bắt đầu khám phá ${DynikAssets.categoryName(category.id)}`);
+    btn.setAttribute("aria-label", `Chọn ${DynikAssets.categoryName(category.id)}`);
     btn.dataset.categoryId = category.id;
     btn.innerHTML = `
       <span class="category-card__thumb" aria-hidden="true">
@@ -153,12 +155,11 @@
       <span class="category-card__body">
         <span class="category-card__title">${escapeHtml(DynikAssets.categoryName(category.id))}</span>
         <span class="category-card__meta">
-          <span class="dot" aria-hidden="true"></span>
-          <span>${DynikAssets.categoryQuestionCount(category)} câu · Khám phá gu hương</span>
+          <span>${DynikAssets.categoryQuestionCount(category)} câu hỏi</span>
         </span>
         <span class="category-card__cta">
           Bắt đầu
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <path d="M5 12h14M13 5l7 7-7 7"/>
           </svg>
         </span>
@@ -209,36 +210,33 @@
         <p class="question__category">${escapeHtml(DynikAssets.categoryName(state.categoryId))}</p>
         <h2 class="question__title" id="q-title" tabindex="-1">${escapeHtml(q.text)}</h2>
         <p class="question__intro">Chọn thẻ mô tả đúng gu của bạn nhất.</p>
-        <ul class="options" aria-labelledby="q-title"></ul>
+        <div class="options" role="group" aria-labelledby="q-title"></div>
         <div class="quiz-actions">
           <button type="button" class="btn btn--ghost" id="quiz-back-2" ${state.questionIndex === 0 ? "disabled" : ""}>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-            ${uiCopy.back}
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            <span>${uiCopy.back}</span>
           </button>
           <button type="button" class="btn btn--primary" id="quiz-next" disabled>
-            ${state.questionIndex === cat.questions.length - 1 ? uiCopy.final : uiCopy.continue}
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            <span>${state.questionIndex === cat.questions.length - 1 ? uiCopy.final : uiCopy.continue}</span>
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </button>
         </div>
       </section>
     `;
     screen.appendChild(wrap);
 
-    // options
+    // options (rendered directly as button cards, no list, no radio buttons)
     const optionsList = screen.querySelector(".options");
     q.options.forEach((opt) => {
-      const li = document.createElement("li");
       const btn = document.createElement("button");
       btn.type = "button";
       btn.className = "option";
       btn.setAttribute("aria-pressed", "false");
       btn.dataset.optionId = opt.id;
-      btn.innerHTML = `
-        <span class="option__label">${escapeHtml(opt.label)}</span>
-      `;
+      btn.innerHTML = `<span class="option__label">${escapeHtml(opt.label)}</span>`;
       btn.addEventListener("click", () => {
         state.answers[q.id] = opt.id;
-        // visual
+        // visual active state
         $$(".option", optionsList).forEach((el) => {
           const isSel = el.dataset.optionId === opt.id;
           el.classList.toggle("is-selected", isSel);
@@ -252,7 +250,7 @@
         btn.classList.add("is-selected");
         btn.setAttribute("aria-pressed", "true");
       }
-      // keyboard 1–4
+      // keyboard navigation
       btn.tabIndex = 0;
       btn.addEventListener("keydown", (ev) => {
         const items = $$(".option", optionsList);
@@ -269,8 +267,7 @@
           if (target) target.click();
         }
       });
-      li.appendChild(btn);
-      optionsList.appendChild(li);
+      optionsList.appendChild(btn);
     });
 
     // pre-select previous selection visual
@@ -500,7 +497,7 @@
     wrap.className = "variant-picker";
     wrap.innerHTML = `
       <span class="variant-picker__label">${escapeHtml(entry.variant_label || "Bước cuối: Chọn dung tích bạn muốn mua")}</span>
-      <div class="variant-picker__options" role="radiogroup" aria-label="Chọn dung tích"></div>
+      <div class="variant-picker__options" role="group" aria-label="Chọn dung tích"></div>
       <span class="variant-picker__hint">👇 Vui lòng chọn dung tích (9ml hoặc 50ml) để mở nút mua hàng TikTok Shop.</span>
     `;
     const list = wrap.querySelector(".variant-picker__options");
@@ -510,9 +507,8 @@
       btn.type = "button";
       btn.className = "variant-picker__option";
       btn.dataset.productId = p.id;
-      btn.setAttribute("role", "radio");
       const isSel = !!(entry.selected_product && entry.selected_product.id === p.id);
-      btn.setAttribute("aria-checked", isSel ? "true" : "false");
+      btn.setAttribute("aria-pressed", isSel ? "true" : "false");
       if (isSel) btn.classList.add("is-selected");
 
       const badge = p.size.value === 9 ? " (Bỏ túi)" : (p.size.value === 50 ? " (Chai lớn)" : "");
@@ -522,7 +518,7 @@
         $$(".variant-picker__option", list).forEach((el) => {
           const sel = el.dataset.productId === p.id;
           el.classList.toggle("is-selected", sel);
-          el.setAttribute("aria-checked", sel ? "true" : "false");
+          el.setAttribute("aria-pressed", sel ? "true" : "false");
         });
         DynikScoring.selectVariant(state.cfg, entry, p.id);
         hint.textContent = `✅ Đã chọn chai ${p.size.value} ${p.size.unit}. Bấm nút mua ngay bên dưới để mở TikTok Shop:`;
@@ -763,13 +759,14 @@
   }
 
   /* ----------------------------------------------------------
-   * Combos (compact, non-distracting list from XLSX)
+   * Combos (compact, with product combo images from XLSX/anhdoiy)
    * ---------------------------------------------------------- */
   function findCombosForEntry(entry) {
     if (!state.combos || !state.combos.length || !entry) return [];
     const targetIds = new Set();
     if (entry.kind === "product") {
       if (entry.id) targetIds.add(entry.id);
+      if (entry.product_id) targetIds.add(entry.product_id);
     } else if (entry.kind === "fragrance") {
       if (entry.selected_product && entry.selected_product.id) {
         targetIds.add(entry.selected_product.id);
@@ -780,6 +777,8 @@
         });
       }
       if (entry.id) targetIds.add(entry.id);
+      if (entry.profile_id) targetIds.add(entry.profile_id);
+      if (entry.recommendation_id) targetIds.add(entry.recommendation_id);
     }
 
     return state.combos.filter((combo) => {
@@ -811,7 +810,14 @@
       li.className = "result__combo-item";
       li.innerHTML = `
         <a href="${escapeHtml(c.link)}" target="_blank" rel="noopener noreferrer" class="result__combo-link">
-          <span class="result__combo-name">${escapeHtml(c.name)}</span>
+          ${c.image ? `
+            <span class="result__combo-thumb">
+              <img src="${escapeHtml(c.image)}" alt="" loading="lazy" />
+            </span>
+          ` : ""}
+          <span class="result__combo-info">
+            <span class="result__combo-name">${escapeHtml(c.name)}</span>
+          </span>
           <span class="result__combo-action">
             <span>Mua combo</span>
             <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

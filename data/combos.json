@@ -1,240 +1,271 @@
 [
   {
-    "index": 19,
+    "index": 1,
     "group": "Combo 2 LKM",
     "name": "Combo 2 Lăn khử mùi Khô thoáng hương nước hoa Dynik - Dynamic, 50ml",
     "link": "https://vt.tiktok.com/ZS9D16dYRrryT-dkqo8/",
+    "image": "assets/combos/2lkm_dynamic.jpg",
     "associated_product_ids": [
       "deodorant_dynamic"
     ]
   },
   {
-    "index": 20,
+    "index": 2,
     "group": "Combo 2 LKM",
     "name": "Combo 2 Lăn khử mùi Khô thoáng hương nước hoa Dynik - Legend, 50ml",
     "link": "https://vt.tiktok.com/ZS9D1johKCQJ1-8CZ89/",
+    "image": "assets/combos/2lkm_legend.jpg",
     "associated_product_ids": [
       "deodorant_legend"
     ]
   },
   {
-    "index": 21,
+    "index": 3,
     "group": "Combo 2 LKM",
     "name": "Combo 2 Lăn khử mùi Khô thoáng hương nước hoa Dynik - Oceanic, 50ml",
     "link": "https://vt.tiktok.com/ZS9D16eMxLnAv-vNonV/",
+    "image": "assets/combos/2lkm_oceanic.jpg",
     "associated_product_ids": [
       "deodorant_oceanic"
     ]
   },
   {
-    "index": 22,
+    "index": 4,
     "group": "Combo 2 LKM",
     "name": "Combo 2 Lăn khử mùi Khô thoáng hương nước hoa Dynik - Urban, 50ml",
     "link": "https://vt.tiktok.com/ZS9D1jvpsV9fe-LGOlP/",
+    "image": "assets/combos/2lkm_urban.jpg",
     "associated_product_ids": [
       "deodorant_urban"
     ]
   },
   {
-    "index": 23,
+    "index": 5,
     "group": "Combo 2 ST",
     "name": "Combo 2 Sữa tắm mát lạnh hương nước hoa Dynik - Legend, 650g",
     "link": "https://vt.tiktok.com/ZS9D1632kANMK-dd5tY/",
+    "image": "assets/combos/2st_legend.jpg",
     "associated_product_ids": [
-      "body_wash_legend"
+      "body_wash_legend",
+      "deodorant_legend"
     ]
   },
   {
-    "index": 24,
+    "index": 6,
     "group": "Combo 2 ST",
     "name": "Combo 2 Sữa tắm mát lạnh hương nước hoa Dynik - Oceanic, 650g",
     "link": "https://vt.tiktok.com/ZS9D16cYG4Doa-kBjz5/",
+    "image": "assets/combos/2st_oceanic.jpg",
     "associated_product_ids": [
-      "body_wash_oceanic"
+      "body_wash_oceanic",
+      "deodorant_oceanic"
     ]
   },
   {
-    "index": 25,
+    "index": 7,
     "group": "Combo 2 STG 5in1",
     "name": "Combo 2 Sữa tắm gội 5 in 1 hương nước hoa Dynik - Dynamic, 650g",
     "link": "https://vt.tiktok.com/ZS9D1M2GgrF8j-h5Ejb/",
+    "image": "assets/combos/25in1_dynamic.jpg",
     "associated_product_ids": [
       "wash_5in1_dynamic"
     ]
   },
   {
-    "index": 26,
+    "index": 8,
     "group": "Combo 2 STG 5in1",
     "name": "Combo 2 Sữa tắm gội 5 in 1 hương nước hoa Dynik - Legend, 650g",
     "link": "https://vt.tiktok.com/ZS9D1MFsTBEbV-nC0JT/",
+    "image": "assets/combos/25in1_legend.jpg",
     "associated_product_ids": [
       "wash_5in1_legend"
     ]
   },
   {
-    "index": 27,
+    "index": 9,
     "group": "Combo 2 STG 5in1",
     "name": "Combo 2 Sữa tắm gội 5 in 1 hương nước hoa Dynik - Oceanic, 650g",
     "link": "https://vt.tiktok.com/ZS9D1MhAKd6nL-iYQH0/",
+    "image": "assets/combos/25in1_oceanic.jpg",
     "associated_product_ids": [
       "wash_5in1_oceanic"
     ]
   },
   {
-    "index": 28,
+    "index": 10,
     "group": "Combo 2 STG 5in1",
     "name": "Combo 2 Sữa tắm gội 5 in 1 hương nước hoa Dynik - Urban, 650g",
     "link": "https://vt.tiktok.com/ZS9D1MhhNK22D-FrA7D/",
+    "image": "assets/combos/25in1_urban.jpg",
     "associated_product_ids": [
       "wash_5in1_urban"
     ]
   },
   {
-    "index": 29,
+    "index": 11,
     "group": "Combo 2 DG",
     "name": "Combo 2 Dầu gội sạch gàu hương nước hoa Dynik - Dynamic, 650g",
     "link": "https://vt.tiktok.com/ZS9D1MDPT2cCK-t4uGI/",
+    "image": "assets/combos/2dg_dynamic.jpg",
     "associated_product_ids": [
       "shampoo_dynamic"
     ]
   },
   {
-    "index": 30,
+    "index": 12,
     "group": "Combo 2 DG",
     "name": "Combo 2 Dầu gội sạch gàu hương nước hoa Dynik - Legend, 650g",
     "link": "https://vt.tiktok.com/ZS9D1MySqrvmP-27F50/",
+    "image": "assets/combos/2dg_legend.jpg",
     "associated_product_ids": [
       "shampoo_legend"
     ]
   },
   {
-    "index": 31,
+    "index": 13,
     "group": "Combo 2 DG",
     "name": "Combo 2 Dầu gội sạch gàu hương nước hoa Dynik - Oceanic, 650g",
     "link": "https://vt.tiktok.com/ZS9D1My97JY68-fgIdZ/",
+    "image": "assets/combos/2dg_oceanic.jpg",
     "associated_product_ids": [
       "shampoo_oceanic"
     ]
   },
   {
-    "index": 32,
+    "index": 14,
     "group": "Combo 2 DG",
     "name": "Combo 2 Dầu gội sạch gàu hương nước hoa Dynik - Urban, 650g",
     "link": "https://vt.tiktok.com/ZS9D1MaNdGgXX-7uEve/",
+    "image": "assets/combos/2dg_urban.jpg",
     "associated_product_ids": [
       "shampoo_urban"
     ]
   },
   {
-    "index": 33,
+    "index": 15,
     "group": "Combo ST + DG",
     "name": "Combo 1 Sữa tắm mát lạnh 650g + 1 Dầu gội sạch gàu 650g hương nước hoa Dynik (Legend)",
     "link": "https://vt.tiktok.com/ZS9D1MumRoK5H-ZTbyi/",
+    "image": "assets/combos/st_dg_legend.jpg",
     "associated_product_ids": [
       "body_wash_legend",
       "shampoo_legend"
     ]
   },
   {
-    "index": 34,
+    "index": 16,
     "group": "Combo ST + DG",
     "name": "Combo 1 Sữa tắm mát lạnh 650g + 1 Dầu gội sạch gàu 650g hương nước hoa Dynik (Oceanic)",
     "link": "https://vt.tiktok.com/ZS9D1MHMYgELT-f5ite/",
+    "image": "assets/combos/st_dg_oceanic.jpg",
     "associated_product_ids": [
       "body_wash_oceanic",
       "shampoo_oceanic"
     ]
   },
   {
-    "index": 35,
+    "index": 17,
     "group": "Combo LKM + STG 5in1",
     "name": "Combo 1 Lăn khử mùi khô thoáng 50ml + 1 Sữa tắm gội 5in1 650g hương nước hoa Dynik (Dynamic)",
     "link": "https://vt.tiktok.com/ZS9D16kxshDbB-KSr62/",
+    "image": "assets/combos/5in1_lkm_dynamic.jpg",
     "associated_product_ids": [
       "deodorant_dynamic",
       "wash_5in1_dynamic"
     ]
   },
   {
-    "index": 36,
+    "index": 18,
     "group": "Combo LKM + STG 5in1",
     "name": "Combo 1 Lăn khử mùi khô thoáng 50ml + 1 Sữa tắm gội 5in1 650g hương nước hoa Dynik (Legend)",
     "link": "https://vt.tiktok.com/ZS9D16DGxaEfJ-RzoHx/",
+    "image": "assets/combos/5in1_lkm_legend.jpg",
     "associated_product_ids": [
       "deodorant_legend",
       "wash_5in1_legend"
     ]
   },
   {
-    "index": 37,
+    "index": 19,
     "group": "Combo LKM + STG 5in1",
     "name": "Combo 1 Lăn khử mùi khô thoáng 50ml + 1 Sữa tắm gội 5in1 650g hương nước hoa Dynik (Oceanic)",
     "link": "https://vt.tiktok.com/ZS9D16QSbktcA-Umyia/",
+    "image": "assets/combos/5in1_lkm_oceanic.jpg",
     "associated_product_ids": [
       "deodorant_oceanic",
       "wash_5in1_oceanic"
     ]
   },
   {
-    "index": 38,
+    "index": 20,
     "group": "Combo LKM + STG 5in1",
     "name": "Combo 1 Lăn khử mùi khô thoáng 50ml + 1 Sữa tắm gội 5in1 650g hương nước hoa Dynik (Urban)",
     "link": "https://vt.tiktok.com/ZS9D16yX4uSDC-xkrIx/",
+    "image": "assets/combos/5in1_lkm_urban.jpg",
     "associated_product_ids": [
       "deodorant_urban",
       "wash_5in1_urban"
     ]
   },
   {
-    "index": 39,
+    "index": 21,
     "group": "Combo LKM + ST",
     "name": "Combo 1 Lăn khử mùi khô thoáng 50ml + 1 Sữa tắm mát lạnh 650g hương nước hoa Dynik (Legend)",
     "link": "https://vt.tiktok.com/ZS9D16hkd7gLq-ckiOc/",
+    "image": "assets/combos/st_lkm_legend.jpg",
     "associated_product_ids": [
       "deodorant_legend",
       "body_wash_legend"
     ]
   },
   {
-    "index": 40,
+    "index": 22,
     "group": "Combo LKM + ST",
     "name": "Combo 1 Lăn khử mùi khô thoáng 50ml + 1 Sữa tắm mát lạnh 650g hương nước hoa Dynik (Oceanic)",
     "link": "https://vt.tiktok.com/ZS9D16YrQUYfT-JB2Am/",
+    "image": "assets/combos/st_lkm_oceanic.jpg",
     "associated_product_ids": [
       "deodorant_oceanic",
       "body_wash_oceanic"
     ]
   },
   {
-    "index": 41,
+    "index": 23,
     "group": "Combo 2 nước hoa 9ml",
     "name": "Combo 2 Nước hoa Dynik Valoren, 9ml",
     "link": "https://vt.tiktok.com/ZS9D164ekcXAe-ZGxh1/",
+    "image": "assets/combos/2nh_valoren_9ml.jpg",
     "associated_product_ids": [
       "perfume_50ml_valoren",
       "perfume_9ml_valoren"
     ]
   },
   {
-    "index": 42,
+    "index": 24,
     "group": "Combo 2 nước hoa 9ml",
     "name": "Combo 2 Nước hoa Dynik The Mannik, 9ml",
     "link": "https://vt.tiktok.com/ZS9D16CmFt4To-PEUuu/",
+    "image": "assets/combos/2nh_the manik_9ml.jpg",
     "associated_product_ids": [
       "perfume_50ml_the_mannik",
       "perfume_9ml_the_mannik"
     ]
   },
   {
-    "index": 43,
+    "index": 25,
     "group": "Combo 2 nước hoa 9ml",
     "name": "Combo 2 Nước hoa Dynik 9ml (Valoren + The Mannik)",
-    "link": "https://vt.tiktok.com/ZS9D1699tEGMv-EZXZP/",
+    "link": "https://vt.tiktok.com/ZS9DYPy1eLVKg-wvzUl/",
+    "image": "assets/combos/2nh_the mannik_valoren_9ml.jpg",
     "associated_product_ids": [
       "perfume_50ml_the_mannik",
       "perfume_50ml_valoren",
       "perfume_9ml_the_mannik",
-      "perfume_9ml_valoren"
+      "perfume_9ml_valoren",
+      "perfume_journey_breathing_mountain_air",
+      "perfume_journey_bucolic_retreat",
+      "perfume_journey_swimming_at_riverside",
+      "perfume_journey_cocooning_under_snow"
     ]
   }
 ]

@@ -19,8 +19,14 @@ const MIME = {
   ".ico": "image/x-icon",
 };
 
-http.createServer((req, res) => {
-  let url = req.url.split("?")[0];
+const server = http.createServer((req, res) => {
+  let rawUrl = req.url.split("?")[0];
+  let url;
+  try {
+    url = decodeURIComponent(rawUrl);
+  } catch (_) {
+    url = rawUrl;
+  }
   if (url === "/") url = "/index.html";
   const filePath = path.join(ROOT, url);
   if (!filePath.startsWith(ROOT)) {
@@ -38,6 +44,19 @@ http.createServer((req, res) => {
     });
     fs.createReadStream(filePath).pipe(res);
   });
-}).listen(PORT, "127.0.0.1", () => {
+});
+
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.log(`Cổng ${PORT} đang được sử dụng. Đang thử mở cổng ${PORT + 1}...`);
+    server.listen(PORT + 1, "127.0.0.1", () => {
+      console.log(`DYNIK site running at http://127.0.0.1:${PORT + 1}/`);
+    });
+  } else {
+    console.error("Lỗi server:", err);
+  }
+});
+
+server.listen(PORT, "127.0.0.1", () => {
   console.log(`DYNIK site running at http://127.0.0.1:${PORT}/`);
 });
